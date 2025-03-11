@@ -1,5 +1,3 @@
-### OOP
-
 ### SOLID
 **Vì sao nên áp dụng SOLID?**
 - Tăng chất lượng mã: Dễ đọc, dễ hiểu, dễ bảo trì.
@@ -65,7 +63,7 @@
 - Ví dụ đúng: Order nhận vào một interface Database thông qua constructor, và bạn có thể truyền MySQLDatabase, MongoDB, hay PostgreSQL tùy nhu cầu.
 
 - 🎯 Lợi ích: Tăng khả năng mở rộng, dễ dàng thay thế thành phần mà không ảnh hưởng đến hệ thống.
-
+<br>
 ### ACID
 ACID là viết tắt của bốn thuộc tính quan trọng đảm bảo tính toàn vẹn và độ tin cậy của giao dịch trong hệ quản trị cơ sở dữ liệu. Đó là:
 
@@ -125,6 +123,8 @@ ACID là viết tắt của bốn thuộc tính quan trọng đảm bảo tính 
   - Chi phí lưu trữ: Cần không gian đĩa lớn để lưu log và bản sao dữ liệu.
   - Hiệu năng ghi giảm: Ghi log và đồng bộ dữ liệu làm tăng độ trễ của giao dịch.
 
+
+<br>
 
 ### CAP:
  Một hệ thống không thể đảm bảo hoàn hảo cả 3 yếu tố cùng lúc.
