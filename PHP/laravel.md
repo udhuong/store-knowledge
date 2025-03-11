@@ -1,8 +1,8 @@
-### Life cycle:
+## Life cycle:
 
 
 
-### Eloquent và Builder
+## Eloquent và Builder
 - Eloquent ORM:
   - Làm việc với dữ liệu theo kiểu hướng đối tượng (OOP), ánh xạ mỗi bảng thành một Model.
   - Ưu điểm:

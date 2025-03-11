@@ -1,4 +1,4 @@
-### ORM
+## ORM
 - ORM (Object-Relational Mapping) là một kỹ thuật trong lập trình
 - giúp tương tác với cơ sở dữ liệu dễ dàng bằng cách map (ánh xạ) các bảng trong cơ sở dữ liệu thành các đối tượng (object) trong mã nguồn
 - Lợi ích:

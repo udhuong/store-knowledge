@@ -1,4 +1,4 @@
-### OOP
+## OOP
 1. Tính đóng gói (Encapsulation)
   > Đóng gói dữ liệu và hành vi vào cùng một lớp, đồng thời che giấu thông tin bên trong bằng cách giới hạn quyền truy cập. 
 
@@ -26,11 +26,10 @@
   - 🎯 Lợi ích: Giảm độ phức tạp, tập trung vào logic cốt lõi!
 <br>
 
-### Interface và Abstract class
+## Interface và Abstract class
 Interface:
 - là một bản thiết kế (blueprint) mà các lớp khác có thể triển khai (implement)
-- chỉ chứa các khai báo public method, không có phần triển khai (implementation)
-- chỉ chứa các hằng số
+- chỉ chứa các hằng số, các khai báo public method, không có phần triển khai (implementation)
 - khi 1 class implement interface đó phải triển khai chi tiết method đó
 - ko có thuộc tính
 - 1 class có thể implement nhiều interface
@@ -43,10 +42,7 @@ Abstract Class:
 - 1 class chỉ có thể extend 1 abstract class
 - nếu 1 abstract class kế thừa 1 abstract class thì có thể ko triển khai hết các abstract class
 
-So sánh:
-
-
-### Biến instance và biến class (biến có static)
+## Biến instance và biến class (biến có static)
 **biến instance:**
 - thuộc về từng đối tượng.
 - truy cập: Qua đối tượng: object.variable
@@ -69,7 +65,7 @@ public class Person {
 ```
 `species` là `static`, nên mọi đối tượng đều dùng chung giá trị. Nếu thay đổi species, tất cả các đối tượng đều thấy sự thay đổi đó!
 
-### overload, override và final
+## overload, override và final
 **overload:**
 + tạo ra nhiều phiên bản của cùng một phương thức trong cùng một lớp, nhưng với khác biệt về tham số truyền vào.
 + quy tắc Overload:
@@ -94,5 +90,56 @@ public class Person {
 
 **final:**
 + được sử dụng để ngăn chặn kế thừa hoặc ghi đè (override). 
-+ có thể sử dụng final với class hoặc method!
++ có thể sử dụng final với để cố định biến, class hoặc method!
 + trong java có thể final với biến (ko thay đổi giá trị, như là const trong php, nếu là biến tham chiếu, thì địa chỉ không đổi, nhưng nội dung có thể thay đổi.)
+
+## Composition và Inheritance
+Composition là khi một lớp chứa một hoặc nhiều đối tượng của lớp khác như các thuộc tính của nó. Điều này giúp một đối tượng "bao gồm" các thành phần khác để sử dụng các chức năng hoặc dữ liệu của chúng.
+
+Ví dụ: Một chiếc xe ô tô có động cơ, bánh xe, ghế ngồi, v.v.
+Ở đây, ô tô được tạo thành từ nhiều thành phần nhỏ hơn — đây chính là Composition.
+
+**So sánh Composition và Inheritance**
+
+| **Tiêu chí**          | **Composition**                          | **Inheritance (Kế thừa)**      |
+| --------------------- | ---------------------------------------- | ------------------------------ |
+| **Mối quan hệ**       | "has-a" (có một)                         | "is-a" (là một)                |
+| **Mức độ kết nối**    | Lỏng lẻo (**Loose coupling**)            | Chặt chẽ (**Tight coupling**)  |
+| **Khả năng thay thế** | Dễ thay thế thành phần                   | Khó thay đổi hành vi lớp cha   |
+| **Tái sử dụng mã**    | Dễ dàng tái sử dụng thành phần           | Phải mở rộng lớp con           |
+| **Đa dạng hành vi**   | Linh hoạt, có thể thay đổi trong runtime | Cố định, phụ thuộc vào lớp cha |
+
+
+## Câu hỏi thường gặp  
+**OOP là gì? Nêu các đặc điểm chính?**  
+- OOP (Object-Oriented Programming) là lập trình hướng đối tượng, giúp tổ chức mã theo mô hình đối tượng.  
+- 4 đặc điểm chính:
+  - Encapsulation (Đóng gói)
+  - Inheritance (Kế thừa)
+  - Polymorphism (Đa hình)
+  - Abstraction (Trừu tượng)
+
+**Sự khác biệt giữa Abstraction và Encapsulation?**  
+- Abstraction: Ẩn chi tiết triển khai, chỉ hiển thị những gì cần thiết (dùng abstract class & interface).
+- Encapsulation: Bảo vệ dữ liệu bằng cách giới hạn quyền truy cập (dùng private, protected, public).  
+ 
+**Tại sao lại dùng Interface thay vì Abstract Class?**  
+- Interface hỗ trợ đa kế thừa, giúp tách biệt hành vi mà nhiều lớp có thể chia sẻ.
+- Abstract Class phù hợp khi cần một số phương thức có sẵn (code chung).
+
+**Khi nào nên dùng kế thừa, khi nào nên dùng composition?**  
+- Kế thừa khi có quan hệ "IS-A" (Ví dụ: Dog kế thừa Animal).
+- Composition khi có quan hệ "HAS-A" (Ví dụ: Car có Engine).
+
+**Class là gì? Object là gì?**  
+- Class là khuôn mẫu định nghĩa thuộc tính & hành vi của đối tượng.
+- Object là thể hiện cụ thể của một class.
+
+**Constructor có thể bị override không? (Không!)**  
+- Không, vì constructor không được kế thừa, chỉ có thể gọi super() trong constructor lớp con.
+ 
+**Tính đa hình hoạt động như thế nào trong runtime?**  
+- Thông qua method overriding, chương trình quyết định gọi phương thức của lớp con thay vì lớp cha.
+ 
+**Có hỗ trợ đa kế thừa không? (Java thì không, nhưng hỗ trợ thông qua interface)** 
+- Java không hỗ trợ đa kế thừa với class, nhưng có thể dùng interface để mô phỏng. 

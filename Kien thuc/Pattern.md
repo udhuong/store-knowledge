@@ -1,4 +1,4 @@
-### Repository
+## Repository
 > Repository Pattern — một mẫu thiết kế rất phổ biến khi làm việc với CSDL (database). Giúp tách biệt logic truy vấn dữ liệu khỏi logic xử lý nghiệp vụ.
 
 Thường sẽ có 1 interface định nghĩa các method thao tác với db, sau đó sẽ có 1 class implement triển khai chi tết các method đó.
