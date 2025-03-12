@@ -1,23 +1,22 @@
-## Life cycle:
+Active Record vs Data Mapper
 
-**Request tới index.php:** Web server chuyển request vào public/index.php.
-**Khởi động framework:** Load autoload Composer và boot Laravel. Chuyển request vào Kernel để xử lý.
-**HTTP Kernel xử lý:**
+# Life cycle
 
-- Load service providers.
-- Chạy qua các middleware.
-
-**Route điều hướng:** Tìm route phù hợp để gọi controller.
-**Controller xử lý:** Logic chính, truy vấn model, validate, tính toán.
-**Model làm việc với DB:** Truy vấn DB, lưu hoặc cập nhật dữ liệu nếu cần.
-**View (nếu có):** Render giao diện với Blade hoặc trả JSON response.
-**Response trả về:** Gửi kết quả cho client và kết thúc request.
-
-- Laravel dừng xử lý và giải phóng tài nguyên.
+| Bước                   | Mô tả                                                                            |
+| ------------------------ | ---------------------------------------------------------------------------------- |
+| Request tới index.php   | Web server chuyển request vào public/index.php.                                  |
+| Khởi động framework   | Load autoload Composer và boot Laravel. Chuyển request vào Kernel để xử lý. |
+| HTTP Kernel xử lý      | Load service providers. Chạy qua các middleware.                                 |
+| Route điều hướng     | Tìm route phù hợp để gọi controller.                                         |
+| Controller xử lý       | Logic chính, truy vấn model, validate, tính toán.                              |
+| Model làm việc với DB | Truy vấn DB, lưu hoặc cập nhật dữ liệu nếu cần.                           |
+| View (nếu có)          | Render giao diện với Blade hoặc trả JSON response.                             |
+| Response trả về        | Gửi kết quả cho client và kết thúc request.                                  |
+| Hoàn thành             | Laravel dừng xử lý và giải phóng tài nguyên.                               |
 
 ![lifecycle laravel](https://images.viblo.asia/b4bce647-722e-4064-ac19-b7e9e0d0573e.png)
 
-## Các thành phần chính
+# Các thành phần chính
 
 - Routing (Điều hướng)
 - Middleware
@@ -30,45 +29,45 @@
 - Artisan CLI
 - Authentication & Authorization
 
-## Service container (Kho chưa dịch vụ), Service provider
+# Service container, Service provider
 
-- **Service Container** là một công cụ mạnh mẽ, nơi đăng ký và khởi động các thành phần, service mà ứng dụng cần sử dụng.
-- nó quản lý phụ thuộc (Dependency Injection). Nó giúp Laravel tự động lấy và tiêm các phụ thuộc vào class mà không cần khởi tạo thủ công.
+**Định nghĩa:**
 
-**Cách đăng ký vào container**
+Service Container: Là hệ thống quản lý phụ thuộc (Dependency Injection), tự động tạo và tiêm các class vào nhau.
+Service Provider: Là nơi đăng ký và cấu hình các service, giúp Laravel biết cách khởi tạo chúng.
 
-- Cách 1: `app()->bind('App\Services\LoggerService', fn() -> new LoggerService());`
-- Cách 2: `app()->singleton('App\Services\LoggerService', fn() -> new LoggerService()); // Chỉ tạo 1 lần suốt request`
-- lưu ý:
-  - bind tạo instance mới sau mỗi lần gọi LoggerService, singleton sẽ chỉ tạo 1 lần.
-  - cả 2 đều Lazy loading: ý chỉ khởi tạo khi cần
-  - bind: Khi cần instance độc lập (VD: kết nối API tạm thời)
-  - singleton: Khi cần 1 instance duy nhất (VD: logger, cache)
-- bind:
+**Cách đăng ký vào container:**
+
+Cách 1: `app()->bind('App\Services\LoggerService', fn() -> new LoggerService());`
+
+Cách 2: `app()->singleton('App\Services\LoggerService', fn() -> new LoggerService()); // Chỉ tạo 1 lần trong suốt request`
+
+Lưu ý:
+
+- bind tạo instance mới sau mỗi lần gọi LoggerService, singleton sẽ chỉ tạo 1 lần.
+- cả 2 đều Lazy loading: chỉ khởi tạo khi cần
+- bind: Khi cần instance độc lập (VD: kết nối API tạm thời)
+- singleton: Khi cần 1 instance duy nhất (VD: logger, cache)
+
+**Ví dụ:**
 
 ```php
+  //bind:
   $logger1 = app('LoggerService'); 
   $logger2 = app('LoggerService');
 
   dd($logger1 === $logger2); // false
-```
 
-- singleton:
-
-```php
+  //singleton:
   $logger1 = app('LoggerService'); 
   $logger2 = app('LoggerService');
 
   dd($logger1 === $logger2); // true
 ```
 
-Sau khi đăng ký xong, bạn có thể sử dụng LoggerService ở bất cứ đâu mà không cần khởi tạo thủ công!
+Sau khi đăng ký xong,có thể sử dụng LoggerService ở bất cứ đâu mà không cần khởi tạo thủ công!
 
-**Tóm lại**
-Service Container: Là hệ thống quản lý phụ thuộc, tự động tạo và tiêm các class vào nhau.
-Service Provider: Là nơi đăng ký và cấu hình các service, giúp Laravel biết cách khởi tạo chúng.
-
-**Facade**
+# **Facade**
 
 - Facade trong Laravel là class tĩnh cung cấp giao diện đơn giản để gọi hàm service nội bộ.
 - Laravel tự động quản lý qua Service Container, ko cần khởi tạo kiểu DI hoặc new mỗi lần sử dụng.
@@ -88,7 +87,9 @@ class GreetingService
         return "Xin chào, " . $name . "!";
     }
 }
+
 //=============================//
+
 namespace App\Facades;
 
 use Illuminate\Support\Facades\Facade;
@@ -100,7 +101,9 @@ class Greeting extends Facade
         return 'greeting';
     }
 }
+
 //=============================//
+
 use App\Services\GreetingService;
 
 public function register()
@@ -109,7 +112,9 @@ public function register()
         return new GreetingService();
     });
 }
+
 //=============================//
+
 use App\Facades\Greeting;
 
 Route::get('/hello/{name}', function ($name) {
@@ -117,19 +122,13 @@ Route::get('/hello/{name}', function ($name) {
 });
 ```
 
-## Method register() và boot() trong ServiceProvider
+# Method register() và boot() trong ServiceProvider
 
-**register**
-
-- Mục đích: Đăng ký các service, binding class vào Service Container.
-- Thời điểm chạy: Trước khi tất cả các service provider khác được khởi động.
-- Lưu ý: không nên sử dụng bất kỳ service nào đã được đăng ký ở đây, vì chúng có thể chưa sẵn sàng!
-
-**boot**
-
-- Mục đích: Thực hiện các hành động cần thiết sau khi tất cả các service đã đăng ký xong.
-- Thời điểm chạy: Sau khi tất cả provider đã chạy xong phương thức register.
-- Lưu ý: Tại đây có thể sử dụng các service đã đăng ký hoặc cấu hình route, event, policy, v.v.
+|                    | register()                                                                                                         | boot()                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| Mục đích        | Đăng ký các service, binding class vào Service Container                                                      | Thực hiện các hành động cần thiết sau khi tất cả các service đã đăng ký xong |
+| Thời điểm chạy | Trước khi tất cả các service provider khác được khởi động                                              | Sau khi tất cả provider đã chạy xong phương thức register                            |
+| Lưu ý            | Không nên sử dụng bất kỳ service nào đã được đăng ký ở đây, vì chúng có thể chưa sẵn sàng | Có thể sử dụng các service đã đăng ký hoặc cấu hình route, event, policy, v.v.  |
 
 ```php
 namespace App\Providers;
@@ -158,7 +157,7 @@ class LoggerServiceProvider extends ServiceProvider
     {
         // Ghi log khi có request
         $logger = app(LoggerService::class);
-    
+  
         Route::matched(function ($event) use ($logger) {
             $route = $event->route->getName();
             $logger->logAccess("User accessed route: " . ($route ?? 'unknown'));
@@ -168,101 +167,331 @@ class LoggerServiceProvider extends ServiceProvider
 
 ```
 
-| **Phương thức** | **Chức năng chính**                         | **Ví dụ thực tế**                                                   | **Thời điểm chạy**                           |
-| ------------------------ | ---------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------ |
-| **`register`**   | Đăng ký service vào container                    | Đăng ký**LoggerService** bằng singleton                             | Trước khi tất cả service provider hoàn tất       |
-| **`boot`**       | Thực thi logic sau khi mọi service đã đăng ký | Sử dụng**LoggerService** để ghi log mỗi lần có request truy cập | Sau khi tất cả service provider đã đăng ký xong |
+# Eloquent và Builder
 
-## Eloquent và Builder
+**Eloquent ORM:**
 
-- Eloquent ORM:
-  - Làm việc với dữ liệu theo kiểu hướng đối tượng (OOP), ánh xạ mỗi bảng thành một Model.
-  - Ưu điểm:
-    - Giảm nguy cơ SQL Injection, Hỗ trợ Timestamps, Soft Delete, Mutators, Accessors.
-    - sử dụng quan hệ dễ
-  - VD: `$users = User::where('status', 'active')->get();`
-- Query Builder
-  - Viết truy vấn SQL bằng cách sử dụng các phương thức của Laravel mà không cần dùng Eloquent.
-  - Ưu điểm:
-    - Linh hoạt hơn khi truy vấn dữ liệu phức tạp.
-    - Nhanh hơn Eloquent vì không cần ánh xạ dữ liệu thành object.
-    - Hỗ trợ thao tác trên nhiều bảng dễ dàng.
-  - VD: `$userCount = DB::table('users')->count();`
-- Accessor và Mutator trong Eloquent:
-  - Accessor cho phép tùy chỉnh giá trị của một thuộc tính khi lấy ra từ cơ sở dữ liệu.
-  - Mutator tự động thay đổi giá trị của thuộc tính trước khi lưu vào database.
+- Là 1 Active record
+- Làm việc với dữ liệu theo kiểu hướng đối tượng (OOP), ánh xạ mỗi bảng thành một Model.
+- Ưu điểm:
+  - Giảm nguy cơ SQL Injection, Hỗ trợ Timestamps, Soft Delete, Mutators, Accessors.
+  - sử dụng quan hệ dễ
+- VD: `$users = User::where('status', 'active')->get();`
 
-## Middleware
+**Query Builder:**
+
+- Viết truy vấn SQL bằng cách sử dụng các phương thức của Laravel mà không cần dùng Eloquent.
+- Ưu điểm:
+  - Linh hoạt hơn khi truy vấn dữ liệu phức tạp.
+  - Nhanh hơn Eloquent vì không cần ánh xạ dữ liệu thành object.
+  - Hỗ trợ thao tác trên nhiều bảng dễ dàng.
+- VD: `$userCount = DB::table('users')->count();`
+
+**Accessor và Mutator trong Eloquent:**
+
+- Accessor: Thay đổi giá trị khi lấy ra từ DB.
+- Mutator: Thay đổi giá trị trước khi lưu vào DB.
+
+**Active Record vs Data Mapper**
+
+Cả hai đều là mẫu thiết kế (design patterns) giúp kết nối mã nguồn với cơ sở dữ liệu
+
+| **Tiêu chí**             | **Active Record**                                       | **Data Mapper**                                          |
+| -------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------- |
+| **Kiểu thiết kế**       | Mỗi class đại diện cho 1 bảng và bản ghi.              | Model và DB tách biệt, có lớp Mapper trung gian.          |
+| **CRUD**                   | Tích hợp sẵn trong model (`save()`, `delete()`).       | Xử lý bởi lớp Mapper riêng biệt, model không biết SQL. |
+| **Dễ dàng sử dụng**    | Dễ học, dễ dùng, nhanh triển khai.                       | Phức tạp hơn, phải viết nhiều mã hơn.                  |
+| **Tính linh hoạt**       | Kém linh hoạt khi logic phức tạp hoặc nhiều bảng.      | Rất linh hoạt, dễ mở rộng và tối ưu hệ thống lớn.   |
+| **Hiệu suất**            | Nhanh với các thao tác đơn giản.                        | Tối ưu hơn khi xử lý truy vấn phức tạp.                |
+| **Ứng dụng thực tế**   | **Eloquent (Laravel)**, **Active Record (Rails)** | **Doctrine (Symfony)**, **Hibernate (Java)**       |
+| **Phù hợp với dự án** | Nhỏ đến trung bình, CRUD đơn giản.                     | Hệ thống lớn, nghiệp vụ phức tạp, cần tối ưu cao.    |
+
+**Khi nào nên dùng cái nào?**
+
+* **Dùng Active Record:**
+  * Khi làm dự án nhỏ hoặc trung bình.
+  * Khi cần tốc độ phát triển nhanh.
+  * CRUD đơn giản, không nhiều logic phức tạp.
+* **Dùng Data Mapper:**
+  * Khi làm hệ thống lớn, nhiều bảng và mối quan hệ phức tạp.
+  * Khi muốn tách biệt hoàn toàn logic nghiệp vụ và logic truy vấn.
+  * Khi cần tối ưu hiệu suất cao với truy vấn phức tạp.
+
+# Middleware
 
 **Middleware** là các class trung gian xử lý request, response trước hoặc sau khi nó đến controller.
 
 - Tách biết các logic kiểm tra request trước khi cho nó vào controller hoặc chỉnh sửa response trước khi trả lại cho người dùng.
-- Trước khi request vào controller: Bạn có thể kiểm tra quyền truy cập, xác thực người dùng.
-- Sau khi response trả về: Bạn có thể chỉnh sửa nội dung response hoặc thêm header.
+- Trước khi request vào controller: có thể kiểm tra quyền truy cập, xác thực người dùng.
+- Sau khi response trả về: có thể chỉnh sửa nội dung response hoặc thêm header.
 - Có thể sử dụng middleware toàn cục hoặc đăng ký và gọi middleware trong route
 
-## Laravel Octane hoặc Swoole
+# Event và **Listener**
+
+**Định nghĩa**
+
+* **Event** (Sự kiện) là một hành động hoặc sự việc diễn ra trong ứng dụng
+* **Event** chỉ đơn giản là một **class** chứa thông tin về sự kiện đó. Dữ liệu này sẽ truyền cho các Listener sử dụng
+
+Ví dụ:
+
+* Người dùng đăng ký tài khoản.
+* Đơn hàng được tạo thành công.
+* Bài viết mới được xuất bản.
+
+```php
+namespace App\Events;
+
+use App\Models\User;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class UserRegistered {
+    use Dispatchable, SerializesModels;
+
+    public $user;
+
+    public function __construct(User $user) {
+        $this->user = $user;
+    }
+}
+
+```
+
+**Listener**
+
+**Listener** (Trình nghe) là **class** chịu trách nhiệm xử lý hành động cụ thể khi một sự kiện xảy ra. Có thể sử dụng **Listener** để gửi email, ghi log, cập nhật dữ liệu,...
+
+```php
+namespace App\Listeners;
+
+use App\Events\UserRegistered;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use App\Mail\WelcomeEmail;
+use Mail;
+
+class SendWelcomeEmail {
+    public function __construct() {}
+
+    public function handle(UserRegistered $event) {
+        Mail::to($event->user->email)->send(new WelcomeEmail($event->user));
+    }
+}
+
+```
+
+**Đăng ký Event & Listener**
+
+Laravel tự động quét event và listener nếu bạn dùng **Laravel 8+** trở lên. Tuy nhiên, \vẫn có thể đăng ký thủ công trong file `EventServiceProvider.php`:
+
+```php
+protected $listen = [
+    UserRegistered::class => [
+        SendWelcomeEmail::class,
+    ],
+];
+
+// Kích hoạt event
+event(new UserRegistered($user));
+```
+
+**Tại sao nên dùng event và listner?**
+
+* **Tách biệt logic:** Giúp mã nguồn dễ bảo trì hơn.
+* **Dễ dàng mở rộng:** Dễ thêm nhiều listener mà không ảnh hưởng đến code cũ.
+* **Hỗ trợ Queue:** Giảm tải cho server bằng cách xử lý tác vụ nặng ở background.
+
+**Lưu ý:**
+
+- Muốn xử lý Listener bất đồng bộ, Listener implement ShouldQueue
+- Event Subscriber để gom nhiều listener lại
+
+# Job/Queue
+
+**Định nghĩa**
+
+**Job** là một lớp đại diện cho một **tác vụ cụ thể** mà bạn muốn thực hiện
+
+Jobs giúp **đóng gói logic** và có thể chạy **ngay lập tức** hoặc đưa vào **queue** để xử lý **bất đồng bộ**
+
+Queue giúp **xử lý các tác vụ tốn thời gian (ví dụ như gửi email, tạo báo cáo, resize ảnh)  **ngoài tiến trình chính** , giúp ứng dụng phản hồi nhanh hơn và tránh bị chậm.**
+
+Queue là  **hàng đợi nhiệm vụ** , nơi các **job** (tác vụ) được xếp vào và xử lý theo nguyên tắc **FIFO** (First In, First Out).
+
+**Ví dụ thực tế:** Khi người dùng đăng ký tài khoản:
+
+1. **Tác vụ chính:** Lưu thông tin user vào database (chạy ngay).
+2. **Tác vụ phụ:** Gửi email chào mừng (đẩy vào queue và xử lý sau).
+
+Nhờ đó, người dùng nhận phản hồi nhanh, không phải đợi quá trình gửi email hoàn tất.
+
+**Khi nào nên dùng queue?**
+
+* **Gửi email** : Tránh làm người dùng đợi lâu.
+* **Xử lý file nặng** : Resize ảnh, xuất file PDF lớn,...
+* **Thông báo real-time** : Push thông báo qua WebSocket.
+* **Đồng bộ dữ liệu** : Ví dụ: đẩy data sang hệ thống bên ngoài.
+
+**Thông tin thêm:**
+
+Chạy queue `php artisan queue:work` chạy hết queue là dừng nên cần chạy nền liên tục với Supervisor (php) hoặc PM2 (chủ yếu cho node.js, php dùng vẫn oki)
+
+Có thể tạo nhiều worker queue để tối ưu tốc độ xử lý queue `php artisan queue:work --queue=orders --sleep=3 --tries=3` chỉ định tên queue cụ thể và tăng worker lên
+
+# Event/Listener và Queue khác nhau thế nào?
+
+| **Tiêu chí**             | **Event/Listener**                                                                                  | **Queue (Job)**                                                                                                      |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **Chức năng chính**     | Kích hoạt và xử lý nhiều hành động khi một sự kiện xảy ra (như "Người dùng đăng ký"). | Đẩy tác vụ vào hàng đợi và xử lý sau để tránh làm chậm tiến trình chính (như gửi email, resize ảnh). |
+| **Thời điểm thực thi** | **Thực thi ngay lập tức** khi event xảy ra (trừ khi kết hợp với queue).                     | **Thực thi bất đồng bộ**, có thể chạy sau hoặc delay theo thời gian đặt trước.                         |
+| **Ví dụ**                | Sau khi tạo đơn hàng: gửi email, tạo log, cập nhật điểm thưởng cùng lúc.                    | Sau khi tạo đơn hàng: gửi email xác nhận qua queue để không làm người dùng đợi lâu.                       |
+| **Đa nhiệm**             | Một event có thể kích hoạt nhiều listener cùng lúc.                                               | Một job thường xử lý một tác vụ cụ thể (nhưng có thể gọi nhiều job liên tiếp).                            |
+| **Queue hỗ trợ**         | Có thể kết hợp listener với queue để xử lý bất đồng bộ.                                      | Queue bản chất là xử lý bất đồng bộ, mạnh mẽ khi cần tối ưu hiệu suất.                                     |
+
+# Cache
+
+**Laravel cung cấp hệ thống cache mạnh mẽ giúp tăng tốc độ và giảm tải cơ sở dữ liệu bằng cách lưu trữ dữ liệu tạm thời. Hệ thống này hỗ trợ nhiều driver khác nhau như  file, database, Redis, Memcached ...**
+
+**Khi nào nên dùng Cache?**
+
+* Dữ liệu không thay đổi thường xuyên (Danh mục sản phẩm, bài viết phổ biến).
+* Giảm tải database, cải thiện tốc độ.
+* Cần tối ưu hiệu suất API hoặc trang web.
+
+**Không nên dùng Cache khi:**
+
+* Dữ liệu thay đổi liên tục (Số dư tài khoản, trạng thái đơn hàng).
+* Cần hiển thị thông tin **real-time** (chat, thông báo tức thì).
+
+# **Command**
+
+**Command** là các lệnh tùy chỉnh tạo ra để chạy các tác vụ phức tạp từ terminal thông qua **Artisan CLI**
+
+**Một số use case thực tế:**
+
+- Tạo command để Task Scheduling sử dụng
+- Chủ động thực thi 1 logic nào đó đặc biệt, chạy 1 lần thôi hoặc nếu cần thì mới chạy
+  - Ví dụ hệ thống đơn hàng có 1 số đơn bị lỗi, tạo command để truyền mã đơn vào và xóa khỏi bảng nào đó.
+  - Cần convert dữ liệu cột A sang cột B trong 1 bảng hay bảng khác theo logic đặc biệt
+  - Test dữ liệu chủ động, debug
+
+Thường command sẽ sử dụng 1 số phương thức hỗ trợ show log để theo dõi và debug
+
+Không nên để logic quá phức tạp ở command, logic phức tạp nên để ở class khác và command gọi vào class đó để thực thi
+
+# **Task Scheduling**
+
+**Định nghĩa:**
+
+* **Task Scheduling** để tự động hóa các công việc định kỳ như  **gửi email**,  **làm sạch database**,  **backup dữ liệu**, mà không cần viết crontab phức tạp
+* Cần thiết lập trong cronjob của OS, dòng này sẽ chạy lệnh **`schedule:run` mỗi phút** để Laravel kiểm tra và kích hoạt các task đã lên lịch  `cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1`
+
+**Hướng dẫn sử dụng:**
+
+* Bản chất là 1 tạo command sau đó thiết lập schedule cho phép chạy tự động command đó theo thiết lập
+* Chỉnh sửa file `app/Console/Kernel.php`
+
+```php
+protected function schedule(Schedule $schedule)
+{
+    $schedule->command('emails:send-reminders')->dailyAt('08:00'); //Chạy command định kỳ
+    $schedule->job(new ProcessReports)->daily(); //Chạy job
+}
+
+```
+
+**Vấn đề khi chạy task đồng bộ**
+
+Mặc định, lên lịch chạy task (ví dụ: gửi email hoặc tạo báo cáo lớn), Laravel sẽ **thực thi ngay lập tức** trong tiến trình chính. Điều này có thể gây ra:
+
+* ⏳ **Chậm hệ thống:** Task nặng làm treo ứng dụng.
+* 🔒 **Block request:** Người dùng phải chờ task chạy xong mới tiếp tục thao tác.
+* 🚨 **Timeout:** Task quá lâu có thể bị server kill mất kết nối.
+
+👉 Để giải quyết vấn đề này, cần kết hợp **Scheduler** với **Queue** để  **đẩy task sang hàng đợi** , xử lý nền mà không làm gián đoạn ứng dụng chính! 🎯
+
+**Khi nào nên dùng Scheduler?**
+
+✅ **Nên dùng:**
+
+* Gửi email nhắc nhở hoặc thông báo.
+* Xóa log cũ, làm sạch database.
+* Tạo báo cáo hoặc backup dữ liệu định kỳ.
+* Đồng bộ dữ liệu với hệ thống khác.
+
+❌ **Không nên dùng:**
+
+* Xử lý tác vụ lớn cần real-time (dùng Queue tốt hơn).
+* Task cần phản hồi ngay lập tức cho người dùng.
+
+# Laravel Octane
 
 **Truyền thống:**
+
 - Kết nối theo request (Stateless Connection). mô hình request-response truyền thống của PHP
-  - Mỗi request HTTP là 1 tiến trình độc lập.
+  - Mỗi request HTTP là 1 process độc lập.
   - Laravel khởi động toàn bộ framework mỗi khi nhận request.
   - Kết nối database được tạo mới khi request bắt đầu và đóng lại khi request kết thúc.
 - Quá trình chạy:
   1. **Client gửi request** → PHP-FPM nhận.
-  2. **Laravel boot lên** , load tất cả service providers.
+  2. **Laravel boot lên**, load tất cả service providers.
   3. **Tạo kết nối database:** Laravel dùng PDO để kết nối MySQL/PostgreSQL.
   4. **Xử lý query:** Thực hiện truy vấn, trả kết quả.
   5. **Đóng kết nối:** Khi request kết thúc, PHP sẽ **hủy kết nối** với DB.
 - Nhược điểm:
   - **Tốn thời gian kết nối lại** mỗi request (~ vài ms).
-  - **Không tái sử dụng connection** , làm tăng độ trễ.
+  - **Không tái sử dụng connection**, làm tăng độ trễ.
   - **Tốn tài nguyên** khi phải liên tục mở/đóng kết nối.
-
-**Database Connection Pool (chưa có sẵn)**
+- Database Connection Pool (chưa có sẵn)
   - Laravel bản gốc không có connection pool (pool kết nối) để tái sử dụng kết nối giữa các request. Mỗi request là 1 kết nối mới hoàn toàn.
   - Nếu muốn connection pool trước đây, phải dùng library ngoài như:
     - Laravel Connection Pool
     - PDO Connection Pool với Redis (hoặc Memcached) để lưu connection.
 
 **Thay đổi:**
+
 Laravel Octane là package chính thức của Laravel, giúp chạy ứng dụng PHP theo mô hình server lâu dài và giữ trạng thái giữa các request.
+
 - Laravel chạy như một server liên tục.
 - Boot framework 1 lần duy nhất, giữ sẵn kết nối và cấu hình trong RAM.
-- Tái sử dụng tài nguyên (DB connection, singleton service) cho các request sau.  
+- Tái sử dụng tài nguyên (DB connection, singleton service) cho các request sau.
 
-Octane hỗ trợ 2 trình điều khiển (application server):  
+Octane hỗ trợ 2 trình điều khiển (application server):
+
 - Swoole: Cực nhanh, hỗ trợ coroutine, WebSocket, timer.
 - RoadRunner: Dùng Golang, dễ cài đặt và nhẹ.
 
-**Swoole là gì?**
+# **Swoole là gì?**
+
 - Swoole là một extension PHP, PHP >= 8.1
-- giúp tạo server bất đồng bộ, tương tự như Node.js nhưng mạnh mẽ hơn nhờ tích hợp sâu với PHP.
+- Giúp tạo server bất đồng bộ, tương tự như Node.js nhưng mạnh mẽ hơn nhờ tích hợp sâu với PHP.
 - Tính năng nổi bật của Swoole:
+
   - HTTP Server: Nhận và xử lý request mà không cần Apache/Nginx.
   - Coroutine: Xử lý nhiều tác vụ cùng lúc (IO, database) mà không chặn luồng chính.
   - Connection Pool: Giữ kết nối với database, Redis mà không đóng sau mỗi request.
   - WebSocket + TCP/UDP Server: Tạo real-time ứng dụng như chat, noti dễ dàng.
-- Swoole biến PHP thành ngôn ngữ chạy server như Node.js, và Laravel Octane giúp bạn tận dụng sức mạnh đó!
-
+- Swoole biến PHP thành ngôn ngữ chạy server như Node.js, và Laravel Octane giúp tận dụng sức mạnh đó!
 - Sự khác biệt khi dùng Octane + Swoole
 
-| **Tính năng**              | **Laravel truyền thống**                           | **Laravel + Octane + Swoole**                   |
-|----------------------------|----------------------------------------------------|------------------------------------------------|
-| **Boot framework**         | Mỗi request                                        | Chỉ boot 1 lần duy nhất                         |
-| **Kết nối database**       | Mỗi request tạo và đóng kết nối                    | Giữ kết nối DB trong RAM (Connection Pool)      |
-| **Xử lý tác vụ bất đồng bộ**| Không hỗ trợ                                      | Hỗ trợ coroutine, xử lý song song nhiều tác vụ  |
-| **WebSocket / Real-time**  | Cần cài thêm package (pusher, socket.io)           | Swoole tích hợp WebSocket sẵn                   |
-| **Hiệu suất**              | ~ 100-200 req/s                                    | **~ 1000-2000 req/s** hoặc cao hơn              |
-| **Tài nguyên tiêu thụ**    | Cao (vì phải khởi động lại app mỗi request)         | Thấp (do tái sử dụng tài nguyên)                |
+| **Tính năng**                      | **Laravel truyền thống**                   | **Laravel + Octane + Swoole**                   |
+| ------------------------------------------ | -------------------------------------------------- | ----------------------------------------------------- |
+| **Boot framework**                   | Mỗi request                                       | Chỉ boot 1 lần duy nhất                            |
+| **Kết nối database**               | Mỗi request tạo và đóng kết nối             | Giữ kết nối DB trong RAM (Connection Pool)         |
+| **Xử lý tác vụ bất đồng bộ** | Không hỗ trợ                                    | Hỗ trợ coroutine, xử lý song song nhiều tác vụ |
+| **WebSocket / Real-time**            | Cần cài thêm package (pusher, socket.io)        | Swoole tích hợp WebSocket sẵn                      |
+| **Hiệu suất**                      | ~ 100-200 req/s                                    | **~ 1000-2000 req/s** hoặc cao hơn            |
+| **Tài nguyên tiêu thụ**          | Cao (vì phải khởi động lại app mỗi request) | Thấp (do tái sử dụng tài nguyên)                |
 
-- Khi nào nên dùng Laravel Octane + Swoole?
+**Khi nào nên dùng Laravel Octane + Swoole?**
 🔹 Ứng dụng tốc độ cao: API, microservice, hệ thống cần phản hồi nhanh.
 🔹 Real-time app: Chat, thông báo, game online (dùng WebSocket).
 🔹 Hệ thống nhiều kết nối đồng thời: App nhiều request nhỏ lẻ (ví dụ like/comment).
 🔹 Ứng dụng nền tảng lớn: Số lượng user cao, cần tối ưu tối đa tài nguyên.
 
-- Trước và sau khi có Octane sử dụng coroutine
+**Trước và sau khi có Octane sử dụng coroutine**
+
 ```php
 Route::get('/sync', function () {
     $users = DB::table('users')->get();      // Query 1 300ms
@@ -299,25 +528,19 @@ Route::get('/fetch-data', function () {
 
 **Giới thiệu nhanh về Swoole và RoadRunner**
 
-| **Tính năng**                | **Swoole**                                                                                       | **RoadRunner**                                                                                           |
-|------------------------------|--------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
-| **Ngôn ngữ**                  | **PHP Extension** (viết bằng C)                                                                  | **Standalone Binary** (viết bằng Golang)                                                                   |
-| **Cách hoạt động**            | Laravel chạy trực tiếp trên **Swoole server** (không cần Nginx/Apache).                           | RoadRunner làm **Reverse Proxy** (thay thế Nginx), truyền request qua **gRPC** đến các worker PHP.          |
-| **Kiểu xử lý**                | **Asynchronous + Coroutine** (đa nhiệm không chặn)                                               | **Synchronous + Fiber (thread nhẹ)**                                                                       |
-| **Hỗ trợ WebSocket**          | ✅ Tích hợp sẵn (WebSocket, TCP/UDP server, timer)                                                 | ❌ Không hỗ trợ WebSocket trực tiếp (phải dùng thư viện ngoài)                                              |
-| **Quản lý worker**            | Tích hợp sẵn trong **Swoole**                                                                     | RoadRunner quản lý worker cực tốt (restart worker khi lỗi, tự động scale)                                   |
-| **Tương thích PHP**           | Cần cài thêm **PHP extension** (không dễ trên shared hosting)                                     | **Không cần cài PHP extension** (chạy độc lập với PHP)                                                      |
-| **Độ phức tạp cài đặt**       | Hơi phức tạp (vì phải biên dịch Swoole và cấu hình thêm)                                          | **Dễ dàng hơn** (chỉ cần 1 file `rr` binary và cấu hình YAML)                                              |
-| **Hiệu suất**                 | Cực nhanh 🚀 (nhanh hơn PHP-FPM rất nhiều)                                                        | Rất nhanh ⚡ (không nhanh bằng Swoole trong tác vụ bất đồng bộ, nhưng nhanh hơn PHP-FPM đáng kể)            |
-| **Trường hợp sử dụng phù hợp** | Real-time app, chat, thông báo live, game online, API cần tốc độ cao                              | API service, microservice, app truyền thống cần hiệu năng tốt nhưng không cần real-time phức tạp           |
+| **Tính năng**                       | **Swoole**                                                                   | **RoadRunner**                                                                                                |
+| ------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Ngôn ngữ**                        | **PHP Extension** (viết bằng C)                                            | **Standalone Binary** (viết bằng Golang)                                                                    |
+| **Cách hoạt động**                | Laravel chạy trực tiếp trên**Swoole server** (không cần Nginx/Apache). | RoadRunner làm**Reverse Proxy** (thay thế Nginx), truyền request qua **gRPC** đến các worker PHP. |
+| **Kiểu xử lý**                     | **Asynchronous + Coroutine** (đa nhiệm không chặn)                       | **Synchronous + Fiber (thread nhẹ)**                                                                         |
+| **Hỗ trợ WebSocket**                | ✅ Tích hợp sẵn (WebSocket, TCP/UDP server, timer)                              | ❌ Không hỗ trợ WebSocket trực tiếp (phải dùng thư viện ngoài)                                            |
+| **Quản lý worker**                  | Tích hợp sẵn trong**Swoole**                                              | RoadRunner quản lý worker cực tốt (restart worker khi lỗi, tự động scale)                                   |
+| **Tương thích PHP**                | Cần cài thêm**PHP extension** (không dễ trên shared hosting)           | **Không cần cài PHP extension** (chạy độc lập với PHP)                                                |
+| **Độ phức tạp cài đặt**        | Hơi phức tạp (vì phải biên dịch Swoole và cấu hình thêm)                | **Dễ dàng hơn** (chỉ cần 1 file `rr` binary và cấu hình YAML)                                       |
+| **Hiệu suất**                       | Cực nhanh 🚀 (nhanh hơn PHP-FPM rất nhiều)                                     | Rất nhanh ⚡ (không nhanh bằng Swoole trong tác vụ bất đồng bộ, nhưng nhanh hơn PHP-FPM đáng kể)      |
+| **Trường hợp sử dụng phù hợp** | Real-time app, chat, thông báo live, game online, API cần tốc độ cao         | API REST service, microservice, app truyền thống cần hiệu năng tốt nhưng không cần real-time phức tạp   |
 
-🔹 **Swoole:** Lý tưởng cho **ứng dụng real-time**, **WebSocket**, và **nhiệm vụ bất đồng bộ**.  
-🔸 **RoadRunner:** Phù hợp với **API REST**, **microservice**, hoặc các **ứng dụng PHP truyền thống** cần tốc độ cao mà dễ triển khai.
-
-
-## Câu hỏi thường gặp
-
-**Phân biệt register và boot trong AppServiceProvider hay trong các class SerivceProvider?**
+# Câu hỏi thường gặp
 
 **Laravel hỗ trợ những phương thức authentication nào?**
 
@@ -343,15 +566,6 @@ Route::get('/fetch-data', function () {
 - Role-based Authentication (ACL)
 
 **Event và Listener trong Laravel hoạt động thế nào?**
-
-- Event là một lớp đại diện cho một sự kiện nào đó trong hệ thống.
-- Ví dụ: Người dùng đăng ký tài khoản, Đơn hàng được tạo, Email được gửi, v.v.
-- Listener là lớp xử lý sự kiện — nó sẽ lắng nghe sự kiện và thực hiện hành động tương ứng.
-- Ví dụ: Gửi email chào mừng sau khi người dùng đăng ký!
-- Laravel dùng file EventServiceProvider để đăng ký sự kiện và listener
-- Kích hoạt sự kiện: event(new UserRegistered($user));
-- Muốn xử lý Listener bất đồng bộ, Listener implement ShouldQueue
-- Event Subscriber để gom nhiều listener lại
 
 **Broadcasting là gì? Khi nào nên sử dụng broadcasting?**
 
