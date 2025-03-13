@@ -1,18 +1,16 @@
-Active Record vs Data Mapper
-
 # Life cycle
 
-| Bước                   | Mô tả                                                                            |
-| ------------------------ | ---------------------------------------------------------------------------------- |
-| Request tới index.php   | Web server chuyển request vào public/index.php.                                  |
+| Bước                  | Mô tả                                                                       |
+| --------------------- | --------------------------------------------------------------------------- |
+| Request tới index.php | Web server chuyển request vào public/index.php.                             |
 | Khởi động framework   | Load autoload Composer và boot Laravel. Chuyển request vào Kernel để xử lý. |
-| HTTP Kernel xử lý      | Load service providers. Chạy qua các middleware.                                 |
-| Route điều hướng     | Tìm route phù hợp để gọi controller.                                         |
-| Controller xử lý       | Logic chính, truy vấn model, validate, tính toán.                              |
-| Model làm việc với DB | Truy vấn DB, lưu hoặc cập nhật dữ liệu nếu cần.                           |
-| View (nếu có)          | Render giao diện với Blade hoặc trả JSON response.                             |
-| Response trả về        | Gửi kết quả cho client và kết thúc request.                                  |
-| Hoàn thành             | Laravel dừng xử lý và giải phóng tài nguyên.                               |
+| HTTP Kernel xử lý     | Load service providers. Chạy qua các middleware.                            |
+| Route điều hướng      | Tìm route phù hợp để gọi controller.                                        |
+| Controller xử lý      | Logic chính, truy vấn model, validate, tính toán.                           |
+| Model làm việc với DB | Truy vấn DB, lưu hoặc cập nhật dữ liệu nếu cần.                             |
+| View (nếu có)         | Render giao diện với Blade hoặc trả JSON response.                          |
+| Response trả về       | Gửi kết quả cho client và kết thúc request.                                 |
+| Hoàn thành            | Laravel dừng xử lý và giải phóng tài nguyên.                                |
 
 ![lifecycle laravel](https://images.viblo.asia/b4bce647-722e-4064-ac19-b7e9e0d0573e.png)
 
