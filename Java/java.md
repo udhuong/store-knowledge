@@ -154,7 +154,6 @@ Collection không phải là một lớp cụ thể mà là một giao diện, �
 * **Set**: Tập hợp không trùng lặp (ví dụ: **HashSet**, **TreeSet**).
 * **Queue**: Hàng đợi, hỗ trợ thêm/xóa theo thứ tự nhất định (ví dụ: **PriorityQueue**, **LinkedList**).
 
-
 Các Interface Chính Trong Collection
 
 **List** :
@@ -203,5 +202,96 @@ Garbage Collector
 | Phương thức chính |
 | --------------------- |
 
-|  |
-| - |
+| <br /> |
+| ------ |
+
+
+### Exception
+
+Trong Java, exception được chia thành 3 loại chính:
+
+1. **Checked Exception**
+   * Được kiểm tra tại thời điểm biên dịch (compile-time).
+   * Bắt buộc phải xử lý nếu không sẽ gây lỗi khi biên dịch.
+   * Ví dụ: `IOException`, `SQLException`, `FileNotFoundException`.
+2. **Unchecked Exception**
+   * Xảy ra trong quá trình thực thi (runtime) và không bắt buộc phải xử lý.
+   * Thường là lỗi do lập trình viên, có thể tránh được nếu viết code cẩn thận.
+   * Ví dụ: `NullPointerException`, `ArrayIndexOutOfBoundsException`, `ArithmeticException`.
+3. **Error**
+   * Lỗi nghiêm trọng liên quan đến môi trường hoặc hệ thống.
+   * Không thể khắc phục trong mã nguồn.
+   * Ví dụ: `OutOfMemoryError`, `StackOverflowError`.
+
+```php
+                 Throwable
+                 /      \
+         Exception     Error
+         /       \
+Checked    Unchecked
+
+```
+
+### I/O (Đọc/Ghi File)
+
+**Chính Dùng Để Đọc/Ghi File:**
+
+* **`File`** : Đại diện cho file hoặc thư mục trong hệ thống tệp.
+* **`FileReader` / `FileWriter`** : Đọc/ghi file theo ký tự.
+* **`BufferedReader` / `BufferedWriter`** : Đọc/ghi file hiệu quả bằng cách sử dụng bộ nhớ đệm. giúp đọc từng dòng, tối ưu hiệu suất.
+* **`FileInputStream` / `FileOutputStream`** : Đọc/ghi file theo byte.
+* **`DataInputStream` / `DataOutputStream`** : Đọc/ghi dữ liệu nguyên thủy.
+* **`RandomAccessFile`** : Đọc/ghi file ngẫu nhiên.
+
+**So Sánh Các Cách Đọc/Ghi File**
+
+| **Phương thức**                 | **Đọc/Ghi** | **Ưu điểm**                             | **Nhược điểm**                        |
+| ---------------------------------------- | ------------------- | ------------------------------------------------ | ----------------------------------------------- |
+| `FileReader`/`FileWriter`            | Theo ký tự        | Dễ sử dụng, phù hợp với văn bản          | Không tối ưu cho dữ liệu lớn              |
+| `BufferedReader`/`BufferedWriter`    | Theo dòng          | Nhanh hơn do có bộ đệm                      | Cần đóng `BufferedReader`sau khi sử dụng |
+| `FileInputStream`/`FileOutputStream` | Theo byte           | Phù hợp cho file nhị phân (ảnh, video, PDF) | Không thể đọc theo dòng                    |
+| `RandomAccessFile`                     | Ngẫu nhiên        | Đọc/ghi tại vị trí bất kỳ trong file      | Cú pháp phức tạp hơn                       |
+
+**Lưu Ý Khi Làm Việc Với File**
+
+* **Luôn đóng file sau khi sử dụng** để tránh rò rỉ tài nguyên.
+* **Sử dụng `try-with-resources`** để đảm bảo file được đóng tự động.
+* **Kiểm tra sự tồn tại của file** trước khi đọc hoặc ghi.
+* **Xử lý exception** bằng `try-catch` để tránh chương trình bị lỗi khi gặp sự cố.
+
+Ví dụ với `try-with-resources`:
+
+```php
+import java.io.*;
+
+public class TryWithResourcesExample {
+    public static void main(String[] args) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("test.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Lỗi: " + e.getMessage());
+        }
+    }
+}
+
+```
+
+`try-with-resources` là một cơ chế trong Java (từ Java 7 trở đi) giúp tự động đóng tài nguyên (resources) như file, stream, socket, v.v. sau khi sử dụng. Bất kỳ đối tượng nào triển khai interface `AutoCloseable` hoặc `Closeable` đều có thể sử dụng với `try-with-resources`.
+
+Sau khi khối `try` kết thúc, Java sẽ tự động gọi `close()` trên resource mà không cần lập trình viên gọi `close()` thủ công.
+
+* `BufferedReader` được khai báo trong dấu ngoặc `()` của `try`. Điều này đảm bảo rằng khi khối `try` kết thúc, `BufferedReader` sẽ tự động đóng, ngay cả khi có ngoại lệ xảy ra.
+* Không cần gọi `reader.close()` thủ công.
+
+**Nên sử dụng `try-with-resources` thay vì `try-finally`** vì nó đơn giản hơn và ít lỗi hơn.
+
+**Thao tác file cơ bản:**
+
+```java
+// Kiểm tra file tồn tại
+File file = new File("test.txt");
+file.exists()
+```

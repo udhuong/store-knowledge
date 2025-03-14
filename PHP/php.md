@@ -1,4 +1,10 @@
-PDO
+## PHP là gì?
+
+PHP Là Ngôn Ngữ Thông Dịch (Interpreted Language)
+
+Ngôn ngữ thông dịch (Interpreted Language) là loại ngôn ngữ mà mã nguồn được thực thi từng dòng một, thay vì được biên dịch toàn bộ trước khi chạy như ngôn ngữ biên dịch (Compiled Language, ví dụ: C, Java).
+
+PHP có thể nhúng trực tiếp vào HTML.
 
 ## PHP-FPM
 
@@ -52,32 +58,40 @@ User -> Nginx -> PHP-FPM -> Laravel -> MySQL/Redis -> Laravel -> PHP-FPM -> Ngin
 > PHP-FPM và RoadRunner đều dùng worker pool, nhưng PHP-FPM tạo-hủy worker liên tục còn RoadRunner thì giữ worker sống lâu dài và không boot lại Laravel mỗi request.
 
 ## Swoole và roadrunner
+
 - Gọi là application server
 - đều là công cụ mạnh mẽ giúp tăng tốc Laravel (hoặc các framework PHP khác) bằng cách loại bỏ PHP-FPM truyền thống và tối ưu xử lý request!
 - Với Swoole — PHP như ngôn ngữ async hiện đại!
 
 Application Server cho PHP:
+
 - Thay thế PHP-FPM, giúp PHP chạy như server lâu dài, không phải load lại framework mỗi request.
 
 Giữ framework trong RAM (Resident Memory):
+
 - Boot framework 1 lần duy nhất khi khởi động server.
 - Cache class, service provider, config... giúp giảm đáng kể thời gian xử lý request.
 
 Worker Pool (đa tiến trình xử lý song song):
+
 - Chạy nhiều worker process để xử lý nhiều request đồng thời (giống như load balancing nội bộ).
 - Tự động restart worker khi lỗi hoặc đạt giới hạn request để tránh memory leak.
 
 Kết nối persistent (giữ kết nối lâu dài):
+
 - Database, Redis, cache... không phải kết nối lại mỗi request, giúp tiết kiệm thời gian + tài nguyên.
 
 Production-ready:
+
 - Cả hai đều ổn định và tối ưu cho môi trường production.
 - Dễ dàng tích hợp với Docker, Kubernetes, hoặc các hệ thống scale lớn.
 
 Tương thích với Laravel Octane:
+
 - Laravel Octane hỗ trợ cả Swoole và RoadRunner, giúp bạn dễ dàng chạy Laravel với hiệu suất cao.
 
 Cấu hình linh hoạt:
+
 - Cho phép điều chỉnh số lượng worker, timeout, memory limit, và các cài đặt khác để tối ưu theo nhu cầu cụ thể.
 
 ## RoadRunner và Worker là gì trong PHP?
@@ -148,4 +162,66 @@ http:
 - Ứng dụng tải lớn cần scale linh hoạt mà vẫn giữ ổn định.
 - Nếu cần real-time, WebSocket, hoặc nhiệm vụ bất đồng bộ, thì nên chọn **Swoole** thay vì **RoadRunner**!
 
-## ReactPHP 
+## ReactPHP
+
+## Kết nối Database
+
+3 cách kết nối:
+
+* mysqli_connect(). chỉ mysql
+* new mysqli. chỉ mysql
+* new PDO(). Hỗ trợ nhiều csdl
+
+**PDO (PHP Data Objects)** là một cách an toàn và linh hoạt để kết nối và làm việc với cơ sở dữ liệu trong PHP. Nó hỗ trợ nhiều hệ quản trị CSDL như MySQL, PostgreSQL, SQLite, Oracle,...
+
+## I/O (Đọc/Ghi File)
+
+**Tóm tắt nhanh**
+
+| Hoạt động               | Hàm                                   |
+| -------------------------- | -------------------------------------- |
+| Mở file                   | `fopen()`                            |
+| Đóng file                | `fclose()`                           |
+| Ghi file                   | `fwrite()`, `file_put_contents()` |
+| Đọc file                 | `fread()`, `file_get_contents()`  |
+| Đọc từng dòng          | `fgets()`,`file()`                 |
+| Xóa file                  | `unlink()`                           |
+| Kiểm tra file tồn tại   | `file_exists()`                      |
+| Đọc/Ghi CSV              | `fgetcsv()`,`fputcsv()`            |
+| Quản lý thư mục        | `mkdir()`,`rmdir()`,`scandir()`  |
+| Đổi tên/di chuyển file | `rename()`                           |
+
+**Các chế độ mở file**
+
+| Chế độ | Ý nghĩa                                                                                       |
+| --------- | ----------------------------------------------------------------------------------------------- |
+| `r`     | Mở file để đọc. Con trỏ file bắt đầu từ đầu file.                                   |
+| `r+`    | Mở file để đọc và ghi. Con trỏ file bắt đầu từ đầu file.                           |
+| `w`     | Mở file để ghi. Xóa nội dung cũ nếu file tồn tại, tạo mới nếu không có.           |
+| `w+`    | Mở file để đọc và ghi. Xóa nội dung cũ nếu file tồn tại, tạo mới nếu không có. |
+| `a`     | Mở file để ghi, giữ nguyên nội dung cũ, con trỏ ở cuối file.                          |
+| `a+`    | Mở file để đọc và ghi, giữ nguyên nội dung cũ, con trỏ ở cuối file.                |
+| `x`     | Mở file để ghi, tạo file mới. Lỗi nếu file đã tồn tại.                               |
+| `x+`    | Mở file để đọc và ghi, tạo file mới. Lỗi nếu file đã tồn tại.                     |
+
+Kết Luận
+
+* **`fopen()`** và **`fclose()`** để mở và đóng file.
+* **`fwrite()`** và **`file_put_contents()`** để ghi dữ liệu vào file.
+* **`fread()`** , **`fgets()`** và **`file_get_contents()`** để đọc dữ liệu từ file.
+* **`file_exists()`** ,  **`unlink()`** , **`rename()`** để kiểm tra, xóa, di chuyển file.
+* **`fputcsv()`** và **`fgetcsv()`** để làm việc với CSV.
+* **`mkdir()`** ,  **`rmdir()`** , **`scandir()`** để thao tác với thư mục.
+
+Ví dụ:
+
+```php
+$file = fopen("example.txt", "w"); // Mở file ở chế độ ghi
+fwrite($file, "Xin chào!\n"); // Ghi dữ liệu vào file
+fwrite($file, "Chào mừng đến với PHP File I/O.\n"); 
+fclose($file); // Đóng file
+
+// Ghi nhanh bằng file_put_contents()
+file_put_contents("example.txt", "Hello, PHP File I/O!");
+file_put_contents("example.txt", "Dòng mới thêm vào file.\n", FILE_APPEND); // Thêm vào cuối file
+```
