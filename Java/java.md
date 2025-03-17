@@ -4,43 +4,6 @@
 - Quản lý thread: Java cung cấp Thread Pool, ExecutorService, giúp tối ưu việc tạo và quản lý nhiều luồng.
 - Nếu cần tính toán nặng, xử lý đa lõi CPU, Java với thread thật sự sẽ tối ưu hơn.
 
-overview: concurrent package:
-
-- khóa: synchronize, lock, reentrant lock,  reentrance read write lock
-- đồng bộ thời gian giữa các luồng: Phaser, CountDownLatch, Semaphore , CyclicBarrier
-- class đa luồng:
-
-  + Queue: ConcurrentLinkQueue, ConcurrentLinkDeque, BlockingQueue
-  + List: CopyOnWriteArrayList
-  + Set: ConcurrentSkipListSet, CopyOnWriteArraySet
-  + Map: ConcurrentHashMap, ConcurrentSkipListMap
-- atomic class
-- Java Core:
-
-  + Collection: Map, List, Set, Queue, Stack và các triển khai, phân biệt cách dùng của các class
-  + Stream: khái niệm, cách dùng, các hàm có trong stream (lập trình hàm)
-  + Hàm lamda, functional interface
-  + Lập trình đa luồng, bất đồng bộ (e note trước đó r)
-  + Reflection trong java (liên quan đến field, method, class)
-  + Annotation (target, retention, thuộc tính)
-  + Exception: Checked exception vs Uncheck Exception, ...
-  + biến và hàm static
-  + JDBC: Statement vs Prepare Statement, Connection, connection pool, ...
-  + Servlet: khái niệm, mục đích, ...
-  + JPA
-- Spring:
-
-  + Luồng chạy: từ Dispatcher Servlet -> ...
-  + Khái niệm: Ioc, DI
-  + Bean Factory, Application Context
-  + Bean, scope của bean, các cách khởi tạo
-  + Spring security: Luồng chạy, cách hoạt động
-  + AOP: Khái niệm, khi nào dùng, Point cut, Jointpoint, Advice
-  + SpEL
-  + Spring data
-  + các thể loại annotation trong spring
-  + Testing
-
 # **Tính năng nâng cao trong Java Core**
 
 ### **Generics**
@@ -202,9 +165,8 @@ Garbage Collector
 | Phương thức chính |
 | --------------------- |
 
-| <br /> |
-| ------ |
-
+|  |
+| - |
 
 ### Exception
 
@@ -294,4 +256,294 @@ Sau khi khối `try` kết thúc, Java sẽ tự động gọi `close()` trên r
 // Kiểm tra file tồn tại
 File file = new File("test.txt");
 file.exists()
+```
+
+## Các cơ chế đồng bộ hóa
+
+Starvation: khi một **luồng liên tục bị trì hoãn** vì  **các luồng khác được ưu tiên hơn. **Sử dụng fair mode (`true`) trong `ReentrantReadWriteLock`** để đảm bảo công bằng giữa đọc và ghi.**
+
+| **Cơ chế khóa**                                   | **Ưu điểm**                                                                                           | **Nhược điểm**                                                                       | **Hiệu suất**                                | **Khi nào nên dùng?**                                                                |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| **`synchronized`**                                 | ✅ Dễ sử dụng, tích hợp sẵn trong Java                                                                   | ❌ Hiệu suất kém vì chặn toàn bộ luồng khác                                           | ⏳ Chậm (do block toàn bộ luồng truy cập)       | Khi cần đồng bộ hóa đơn giản, không cần hiệu suất cao                             |
+| **`ReentrantLock`**                                | ✅ Linh hoạt hơn `synchronized`, hỗ trợ `tryLock()`,`lockInterruptibly()`                            | ❌ Phải quản lý khóa thủ công (`lock()`và `unlock()`)                               | ⚡ Nhanh hơn `synchronized`khi có nhiều luồng  | Khi cần kiểm soát timeout, kiểm tra trạng thái khóa                                    |
+| **`ReentrantReadWriteLock`**                       | ✅ Tách biệt khóa đọc (`readLock()`) và khóa ghi (`writeLock()`) để cải thiện hiệu suất đọc | ❌ Phức tạp hơn, có thể gây**starvation**(ưu tiên đọc làm ghi bị chặn lâu) | 🚀 Hiệu suất cao nếu đọc nhiều hơn ghi        | Khi có nhiều luồng đọc hơn ghi (cache, cấu trúc dữ liệu chia sẻ)                   |
+| **`StampedLock`**                                  | ✅ Hỗ trợ `tryOptimisticRead()`,`tryConvertToReadLock()`giúp tối ưu hóa                              | ❌ Không reentrant, khó sử dụng, dễ bị deadlock nếu không dùng đúng                 | 🚀 Cao nhất nếu tận dụng `tryOptimisticRead()` | Khi cần hiệu suất tối đa, nhiều đọc hơn ghi, không cần reentrant                   |
+| **`Atomic`(`AtomicInteger`,`AtomicLong`, …)** | ✅ Rất nhanh, không cần khóa (dùng**CAS - Compare And Swap** )                                      | ❌ Chỉ hoạt động với**biến đơn giản**(int, long, boolean, …)                   | ⚡ Cực nhanh, không chặn luồng                   | Khi chỉ cần thao tác trên biến đơn giản mà không cần khóa toàn bộ đối tượng |
+
+#### **`synchronized` (Khóa Mặc Định của Java) - sinh qùa lai**
+
+🔥  **Ưu điểm** :
+
+✅  **Dễ dùng** , chỉ cần thêm `synchronized` vào method hoặc block code.
+
+✅  **Quản lý khóa tự động** , không lo `unlock()` bị quên.
+
+✅ **An toàn** với mọi tình huống đa luồng.
+
+❌  **Nhược điểm** :
+
+❌  **Chặn toàn bộ luồng khác** , kể cả khi chỉ có một luồng ghi còn lại là đọc.
+
+❌  **Không hỗ trợ timeout hoặc kiểm tra trạng thái khóa** .
+
+❌  **Chậm hơn `ReentrantLock` và `StampedLock` trong trường hợp có nhiều luồng** .
+
+📌  **Ứng dụng** :
+
+✔ Khi cần  **đồng bộ đơn giản** .
+
+✔ Khi có **ít luồng truy cập** và hiệu suất không phải là vấn đề.
+
+---
+
+#### **`ReentrantLock` (Khóa Linh Hoạt Hơn `synchronized`) - ri en trừn**
+
+🔥  **Ưu điểm** :
+
+✅ Hỗ trợ **`tryLock()`** (không chờ khóa nếu đã bị giữ).
+
+✅ Hỗ trợ **`lockInterruptibly()`** (cho phép hủy luồng khi chờ khóa).
+
+✅ Hiệu suất **tốt hơn `synchronized`** khi có nhiều luồng.
+
+❌  **Nhược điểm** :
+
+❌  **Cần gọi `lock()` và `unlock()` thủ công** , dễ quên gây deadlock.
+
+❌ **Không có phân tách khóa đọc và khóa ghi** như `ReentrantReadWriteLock`.
+
+📌  **Ứng dụng** :
+
+✔ Khi cần kiểm soát khóa tốt hơn `synchronized`.
+
+✔ Khi cần **thử lấy khóa mà không bị chặn mãi mãi** (`tryLock()`).
+
+---
+
+#### **`ReentrantReadWriteLock` (Khóa Đọc/Ghi)**
+
+🔥 **Ưu điểm:**
+
+✅  **Tách biệt khóa đọc (`readLock()`) và khóa ghi (`writeLock()`)** , giúp tăng hiệu suất.
+
+✅ **Hỗ trợ nhiều luồng đọc cùng lúc** nếu không có luồng ghi nào.
+
+✅ **Hữu ích khi đa số thao tác là đọc** (ví dụ: bộ nhớ cache).
+
+❌ **Nhược điểm:**
+
+❌  **Có thể gây starvation cho luồng đọc** , nếu có quá nhiều luồng ghi liên tục giữ `writeLock()`, khiến luồng đọc không thể chạy.
+
+❌ **Chậm hơn `StampedLock`** khi lượng truy cập lớn, do cơ chế chờ công bằng giữa đọc và ghi.
+
+📌 **Ứng dụng:**
+
+✔ Khi **có nhiều luồng đọc hơn ghi** (cấu trúc dữ liệu chia sẻ, cache).
+
+✔ Khi  **cần bảo vệ dữ liệu nhưng vẫn tối ưu hóa hiệu suất đọc** .
+
+✔ Khi **cần một cơ chế khóa reentrant** nhưng muốn phân biệt giữa đọc và ghi.
+
+---
+
+#### **`StampedLock` (Khóa Hiệu Suất Cao Nhất)**
+
+🔥  **Ưu điểm** :
+
+✅ Hỗ trợ **`tryOptimisticRead()`** – cho phép đọc mà không cần khóa thực sự.
+
+✅ Hỗ trợ **chuyển đổi giữa write lock và read lock** (`tryConvertToReadLock()`).
+
+✅ **Tối ưu hiệu suất đọc** cao hơn `ReentrantReadWriteLock`.
+
+❌  **Nhược điểm** :
+
+❌  **Không reentrant** , cùng một luồng không thể lock nhiều lần.
+
+❌  **Dễ bị deadlock nếu quên mở khóa** .
+
+📌  **Ứng dụng** :
+
+✔ Khi **hầu hết thao tác là đọc** và  **chỉ có một số ít thao tác ghi** .
+
+✔ Khi cần  **hiệu suất cao nhất có thể** .
+
+---
+
+#### **`Atomic` (`AtomicInteger`, `AtomicLong`, …)**
+
+🔥  **Ưu điểm** :
+
+✅  **Không cần dùng khóa thực sự** , sử dụng **CAS (Compare-And-Swap)** để thay đổi giá trị một cách an toàn.
+
+✅ **Hiệu suất cao hơn tất cả các loại khóa khác** trong các thao tác trên biến đơn giản.
+
+❌  **Nhược điểm** :
+
+❌  **Chỉ hoạt động với kiểu dữ liệu nguyên thủy (int, long, boolean, …)** .
+
+❌  **Không phù hợp nếu cần đồng bộ hóa nhiều biến hoặc cấu trúc dữ liệu phức tạp** .
+
+📌  **Ứng dụng** :
+
+✔ Khi chỉ cần **tăng/giảm một biến đơn giản** mà không cần khóa (`AtomicInteger.incrementAndGet()`).
+
+✔ Khi muốn  **tối ưu hiệu suất mà vẫn đảm bảo an toàn dữ liệu** .
+
+## Fair Mode
+
+**Fair Mode** là một tùy chọn trong `ReentrantLock` và `ReentrantReadWriteLock` giúp đảm bảo **thứ tự công bằng** giữa các luồng. Khi một luồng chờ khóa, nó sẽ được **xếp hàng theo thứ tự yêu cầu** thay vì bị luồng khác vượt mặt (starvation). Khi bật  **Fair Mode** , các luồng  **sẽ lấy khóa theo thứ tự yêu cầu (FIFO - First In, First Out)** .
+
+📌 **Cách bật Fair Mode:**
+
+* `new ReentrantLock(true)` → Bật công bằng.
+* `new ReentrantReadWriteLock(true)` → Bật công bằng cho  **ReadWriteLock** .
+
+✅  **Dùng Fair Mode khi** :
+
+* Cần **tránh starvation** (luồng bị bỏ qua mãi mãi).
+* Có nhiều luồng  **đợi khóa trong thời gian dài** .
+* Cần đảm bảo  **công bằng giữa các luồng** .
+
+❌  **Không nên dùng nếu** :
+
+* Hiệu suất quan trọng hơn công bằng ( **Fair Mode chậm hơn** ).
+* Muốn tận dụng khả năng giành khóa nhanh của non-fair mode.
+* Chỉ có một số ít luồng truy cập khóa.
+
+
+## Các cơ chế đồng bộ
+
+
+| Cơ chế                                    | Cách hoạt động                                                                  | Khi nào dùng                                                                                                                                         | Ưu điểm                                                             | Nhược điểm                                                                              |
+| ------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| **CountDownLatch**                    | Chờ số lượng luồng kết thúc trước khi tiếp tục                           | Khi có**số lượng luồng cố định**cần hoàn thành trước khi tiếp tục (VD: tải tài nguyên xong rồi khởi chạy ứng dụng)        | Đơn giản, hiệu quả                                                | Chỉ dùng**một lần**(không reset lại được)                                    |
+| **CyclicBarrier (xi click be ri ờ)** | Chờ tất cả luồng đến checkpoint trước khi tiếp tục                        | Khi**cần đồng bộ nhiều luồng**tại một điểm chung (VD: tất cả luồng phải sẵn sàng trước khi tiếp tục xử lý tiếp theo)      | Có thể**tái sử dụng**(khác `CountDownLatch`)             | Nếu một luồng bị chậm,**tất cả phải chờ**                                    |
+| **Phaser**                            | Đồng bộ theo**nhiều giai đoạn** , có thể thêm/xóa luồng linh hoạt | Khi có**nhiều phase (giai đoạn)**cần đồng bộ (VD: nhiều bước trong pipeline xử lý dữ liệu)                                              | Linh hoạt hơn `CyclicBarrier`, có thể**thêm bớt luồng** | Phức tạp hơn `CyclicBarrier`                                                           |
+| **Semaphore (sém mơ phò)**         | Giới hạn số lượng luồng có thể truy cập tài nguyên cùng lúc            | Khi cần**kiểm soát truy cập tài nguyên giới hạn**(VD: giới hạn số lượng kết nối database, số lượng thread truy cập vào file) | Hiệu quả khi giới hạn số luồng truy cập tài nguyên            | Không đảm bảo đồng bộ giữa các luồng như `CountDownLatch`hay `CyclicBarrier` |
+
+
+
+### CountDownLatch – Chờ nhiều luồng hoàn thành trước khi tiếp tục
+
+Chỉ dùng latch được 1 lần, ko dùng lại được. Luồng chín sẽ gọi await
+
+CountDownLatch  **không ngăn luồng chạy song song** . Nó chỉ làm nhiệm vụ **đếm ngược** và **chặn** những luồng gọi `await()` đến khi `countDown()` được gọi đủ số lần.
+
+```java
+import java.util.concurrent.CountDownLatch;
+
+public class CountDownLatchExample {
+    public static void main(String[] args) throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(3); // Cần 3 countDown()
+
+        for (int i = 1; i <= 3; i++) {
+            new Thread(() -> {
+                System.out.println(Thread.currentThread().getName() + " đang chạy...");
+                try {
+                    Thread.sleep((long) (Math.random() * 3000)); // Giả lập xử lý mất thời gian
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(Thread.currentThread().getName() + " hoàn thành.");
+                latch.countDown(); // Giảm đếm xuống 1
+            }).start();
+        }
+
+        System.out.println("Chờ tất cả luồng hoàn thành...");
+        latch.await(); // Chặn luồng chính cho đến khi countDown() đủ 3 lần
+        System.out.println("Tất cả luồng đã xong, tiếp tục thực thi!");
+    }
+}
+
+
+```
+
+### CyclicBarrier – Đồng bộ tất cả luồng tại checkpoint
+
+`CyclicBarrier` là một cơ chế đồng bộ giúp **tất cả luồng phải chờ nhau tại một điểm chung (checkpoint)** trước khi tiếp tục.
+
+Dùng lại barrier nhiều lần. Khi một luồng gọi `await()`, nó sẽ **chờ** các luồng khác cũng gọi `await()`.
+
+```java
+import java.util.concurrent.CyclicBarrier;
+
+public class CyclicBarrierExample {
+    public static void main(String[] args) {
+        CyclicBarrier barrier = new CyclicBarrier(3, () -> System.out.println("Tất cả luồng đã đến checkpoint!, phải có 3 luồng gọi await() trước khi tiếp tục."));
+
+        for (int i = 1; i <= 3; i++) {
+            new Thread(() -> {
+                System.out.println(Thread.currentThread().getName() + " đến checkpoint.");
+                try {
+                    barrier.await(); // Chờ tất cả 3 luồng đến
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+    }
+}
+
+```
+
+### Phaser – Đồng bộ theo nhiều giai đoạn
+
+```java
+import java.util.concurrent.Phaser;
+
+public class PhaserExample {
+    public static void main(String[] args) {
+        Phaser phaser = new Phaser(3); // Có 3 luồng cần đồng bộ
+
+        for (int i = 1; i <= 3; i++) {
+            new Thread(() -> {
+                System.out.println(Thread.currentThread().getName() + " hoàn thành Phase 1.");
+                phaser.arriveAndAwaitAdvance(); // Chờ tất cả luồng hoàn thành Phase 1
+
+                System.out.println(Thread.currentThread().getName() + " hoàn thành Phase 2.");
+                phaser.arriveAndAwaitAdvance(); // Chờ tất cả luồng hoàn thành Phase 2
+            }).start();
+        }
+    }
+}
+
+```
+
+### **Semaphore** - Giới hạn số lượng luồng có thể truy cập tài nguyên cùng lúc
+
+```java
+import java.util.concurrent.Semaphore;
+
+class PrintQueue {
+    private final Semaphore semaphore;
+
+    public PrintQueue(int printers) {
+        this.semaphore = new Semaphore(printers);
+    }
+
+    public void printDocument(String user) {
+        try {
+            System.out.println(user + " is waiting to print...");
+            semaphore.acquire(); // Chờ nếu không có máy in trống
+            System.out.println(user + " is printing a document.");
+            Thread.sleep(2000); // Giả lập thời gian in
+            System.out.println(user + " has finished printing.");
+            semaphore.release(); // Giải phóng máy in cho người khác
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+public class SemaphoreExample {
+    public static void main(String[] args) {
+        PrintQueue printQueue = new PrintQueue(2); // Tối đa 2 máy in hoạt động cùng lúc
+
+        for (int i = 1; i <= 5; i++) {
+            String user = "User " + i;
+            new Thread(() -> printQueue.printDocument(user)).start();
+        }
+    }
+}
 ```
