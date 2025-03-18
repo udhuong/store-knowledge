@@ -258,7 +258,7 @@ File file = new File("test.txt");
 file.exists()
 ```
 
-## Các cơ chế đồng bộ hóa
+## Các cơ chế khóa luồng
 
 Starvation: khi một **luồng liên tục bị trì hoãn** vì  **các luồng khác được ưu tiên hơn. **Sử dụng fair mode (`true`) trong `ReentrantReadWriteLock`** để đảm bảo công bằng giữa đọc và ghi.**
 
@@ -411,7 +411,8 @@ Starvation: khi một **luồng liên tục bị trì hoãn** vì  **các luồn
 * Muốn tận dụng khả năng giành khóa nhanh của non-fair mode.
 * Chỉ có một số ít luồng truy cập khóa.
 
-## Các cơ chế đồng bộ
+
+## Các cơ chế đồng bộ luồng
 
 | Cơ chế                                    | Cách hoạt động                                                                  | Khi nào dùng                                                                                                                                         | Ưu điểm                                                             | Nhược điểm                                                                              |
 | ------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -543,3 +544,98 @@ public class SemaphoreExample {
     }
 }
 ```
+
+
+## An Toàn Luồng (Thread Safety)
+
+**Định nghĩa:**
+
+An toàn luồng có nghĩa là chương trình có thể chạy song song nhiều luồng mà không xảy ra  **race condition (tranh chấp dữ liệu)** , đảm bảo  **tính toàn vẹn dữ liệu** .
+
+### Các Cơ Chế Đảm Bảo An Toàn Luồng
+
+| **Cơ chế**                   | **Ưu điểm**                                                 | **Nhược điểm**                                                          | **Khi nào dùng?**                                         |
+| ------------------------------------ | -------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| **`synchronized`**           | Dễ sử dụng, khóa toàn bộ phương thức hoặc khối code       | Hiệu suất thấp, chặn luồng                                                   | Khi cần đơn giản và không quan tâm hiệu suất             |
+| **`ReentrantLock`**          | Kiểm soát khóa tốt hơn `synchronized`, hỗ trợ `tryLock()` | Cần `lock()`và `unlock()`, dễ bị deadlock                                 | Khi cần kiểm soát chi tiết việc khóa                        |
+| **`Atomic Variables`**       | Không cần khóa, hiệu suất cao                                   | Chỉ hoạt động với kiểu dữ liệu đơn giản (`int`,`long`,`boolean`) | Khi chỉ cần cập nhật biến đơn giản (counter, flag)        |
+| **`Concurrent Collections`** | Hiệu suất cao, không cần khóa toàn bộ                         | Tốn bộ nhớ hơn `HashMap`,`ArrayList`                                      | Khi dùng danh sách, hàng đợi trong môi trường đa luồng  |
+| **`ThreadLocal`**            | Biến riêng cho từng luồng, không cần đồng bộ                | Khó quản lý bộ nhớ, dễ gây memory leak                                     | Khi mỗi luồng cần lưu dữ liệu riêng (Session, Transaction) |
+
+
+### So Sánh Các Collections Trong Đa Luồng vs Không Đa Luồng
+
+| **Loại Collection** | **Không Hỗ Trợ Đa Luồng** | **Hỗ Trợ Đa Luồng (Thread-Safe)**                           |
+| -------------------------- | ------------------------------------ | --------------------------------------------------------------------- |
+| **Queue**            | `LinkedList`,`ArrayDeque`        | `ConcurrentLinkedQueue`,`ConcurrentLinkedDeque`,`BlockingQueue` |
+| **List**             | `ArrayList`,`LinkedList`         | `CopyOnWriteArrayList`                                              |
+| **Set**              | `HashSet`,`TreeSet`              | `ConcurrentSkipListSet`,`CopyOnWriteArraySet`                     |
+| **Map**              | `HashMap`,`TreeMap`              | `ConcurrentHashMap`,`ConcurrentSkipListMap`                       |
+
+
+#### **Queue – Hàng Đợi Thread-Safe**
+
+**✔ Dùng khi:** Cần một hàng đợi mà nhiều luồng có thể thêm/xóa phần tử mà không bị lỗi.
+
+📌 **Thay thế cho `LinkedList` hoặc `ArrayDeque`** (vốn không an toàn luồng).
+
+| **Queue Type**         | **Mô tả**                                                                              | **Khi nào dùng?**                                                     |
+| ---------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `ConcurrentLinkedQueue<E>` | Hàng đợi không chặn (non-blocking), sử dụng**CAS (Compare-And-Swap)**để tránh khóa. | Khi cần hiệu suất cao, nhiều luồng có thể thêm/xóa mà không chặn. |
+| `ConcurrentLinkedDeque<E>` | Hàng đợi hai đầu không chặn (non-blocking deque).                                       | Khi cần thêm/xóa phần tử từ cả hai đầu danh sách.                   |
+| `BlockingQueue<E>`         | Hàng đợi có thể chặn khi đầy hoặc rỗng.                                              | Khi cần kiểm soát chặt chẽ số lượng phần tử trong hàng đợi.      |
+
+#### **List – Danh Sách Thread-Safe**
+
+📌  **Thay thế cho `ArrayList`** , vì `ArrayList` không an toàn khi nhiều luồng cùng thêm/xóa dữ liệu.
+
+| **List Type**         | **Mô tả**                                                                                 | **Khi nào dùng?**                          |
+| --------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `CopyOnWriteArrayList<E>` | Khi ghi dữ liệu, một bản sao mới được tạo ra, đảm bảo an toàn mà không cần khóa. | Khi có nhiều luồng đọc nhưng ít luồng ghi. |
+
+📌 **Lưu ý:** Vì nó sao chép dữ liệu mỗi khi cập nhật, nó **chậm hơn** `ArrayList` khi ghi dữ liệu nhiều lần.
+
+#### **Set – Tập Hợp Thread-Safe**
+
+📌  **Thay thế cho `HashSet`, `TreeSet`** , vì hai loại này không an toàn khi đa luồng.
+
+| **Set Type**           | **Mô tả**                                                                     | **Khi nào dùng?**                                     |
+| ---------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `ConcurrentSkipListSet<E>` | Sắp xếp phần tử tự động (giống `TreeSet`), hỗ trợ truy cập đồng thời. | Khi cần một tập hợp có thứ tự nhưng vẫn thread-safe. |
+| `CopyOnWriteArraySet<E>`   | Tương tự `CopyOnWriteArrayList`, tạo bản sao mới khi thay đổi.              | Khi có nhiều luồng đọc nhưng ít thay đổi dữ liệu.  |
+
+#### **Map – Bản Đồ Dữ Liệu Thread-Safe**
+
+📌  **Thay thế cho `HashMap`, `TreeMap`** , vì `HashMap` không an toàn khi đa luồng (dễ bị lỗi race condition).
+
+| **Map Type**              | **Mô tả**                                                                                                      | **Khi nào dùng?**                                 |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `ConcurrentHashMap<K, V>`     | Chia khóa thành nhiều**segment** , mỗi segment có thể khóa riêng → Nhanh hơn `synchronized HashMap`. | Khi có nhiều luồng truy cập và cần hiệu suất cao. |
+| `ConcurrentSkipListMap<K, V>` | Tương tự `TreeMap`, đảm bảo thứ tự các phần tử.                                                           | Khi cần Map có thứ tự nhưng vẫn thread-safe.        |
+
+📌 **So sánh `ConcurrentHashMap` với `HashMap`**
+
+* `HashMap` dễ bị lỗi khi nhiều luồng ghi cùng lúc → Có thể gây `ConcurrentModificationException`.
+* `ConcurrentHashMap` chia nhỏ dữ liệu để giảm số lượng luồng bị chặn.
+
+#### Atomic class
+
+**Các Lớp Atomic Quan Trọng**
+
+| **Lớp Atomic**       | **Dữ liệu quản lý**    | **Thay thế cho**                     |
+| --------------------------- | -------------------------------- | ------------------------------------------- |
+| `AtomicInteger`           | Một số nguyên (`int`)       | `volatile int`,`synchronized int`       |
+| `AtomicLong`              | Một số nguyên lớn (`long`) | `volatile long`,`synchronized long`     |
+| `AtomicBoolean`           | Một giá trị `true/false`    | `volatile boolean`                        |
+| `AtomicReference<T>`      | Một tham chiếu đối tượng   | `volatile Object`,`synchronized Object` |
+| `AtomicIntegerArray`      | Mảng `int[]`                  | `synchronized int[]`                      |
+| `AtomicLongArray`         | Mảng `long[]`                 | `synchronized long[]`                     |
+| `AtomicReferenceArray<T>` | Mảng đối tượng `T[]`      | `synchronized Object[]`                   |
+
+📌 **Ưu điểm:** Không cần dùng `synchronized`, giúp truy cập dữ liệu an toàn và nhanh hơn trong môi trường đa luồng.
+
+
+### CompletableFuture
+
+
+### ExecutorService
