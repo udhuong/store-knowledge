@@ -160,7 +160,7 @@ Các class triển khai  **Queue** :
 * **LinkedHashMap**: Giữ thứ tự chèn vào.
 * **TreeMap**: Sắp xếp theo Key.
 
-Garbage Collector
+### Garbage Collector
 
 | Phương thức chính |
 | --------------------- |
@@ -411,9 +411,7 @@ Starvation: khi một **luồng liên tục bị trì hoãn** vì  **các luồn
 * Muốn tận dụng khả năng giành khóa nhanh của non-fair mode.
 * Chỉ có một số ít luồng truy cập khóa.
 
-
 ## Các cơ chế đồng bộ
-
 
 | Cơ chế                                    | Cách hoạt động                                                                  | Khi nào dùng                                                                                                                                         | Ưu điểm                                                             | Nhược điểm                                                                              |
 | ------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -421,8 +419,6 @@ Starvation: khi một **luồng liên tục bị trì hoãn** vì  **các luồn
 | **CyclicBarrier (xi click be ri ờ)** | Chờ tất cả luồng đến checkpoint trước khi tiếp tục                        | Khi**cần đồng bộ nhiều luồng**tại một điểm chung (VD: tất cả luồng phải sẵn sàng trước khi tiếp tục xử lý tiếp theo)      | Có thể**tái sử dụng**(khác `CountDownLatch`)             | Nếu một luồng bị chậm,**tất cả phải chờ**                                    |
 | **Phaser**                            | Đồng bộ theo**nhiều giai đoạn** , có thể thêm/xóa luồng linh hoạt | Khi có**nhiều phase (giai đoạn)**cần đồng bộ (VD: nhiều bước trong pipeline xử lý dữ liệu)                                              | Linh hoạt hơn `CyclicBarrier`, có thể**thêm bớt luồng** | Phức tạp hơn `CyclicBarrier`                                                           |
 | **Semaphore (sém mơ phò)**         | Giới hạn số lượng luồng có thể truy cập tài nguyên cùng lúc            | Khi cần**kiểm soát truy cập tài nguyên giới hạn**(VD: giới hạn số lượng kết nối database, số lượng thread truy cập vào file) | Hiệu quả khi giới hạn số luồng truy cập tài nguyên            | Không đảm bảo đồng bộ giữa các luồng như `CountDownLatch`hay `CyclicBarrier` |
-
-
 
 ### CountDownLatch – Chờ nhiều luồng hoàn thành trước khi tiếp tục
 
