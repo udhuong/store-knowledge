@@ -1,16 +1,16 @@
 # Life cycle
 
-| Bước                  | Mô tả                                                                       |
-| --------------------- | --------------------------------------------------------------------------- |
-| Request tới index.php | Web server chuyển request vào public/index.php.                             |
+| Bước                   | Mô tả                                                                            |
+| ------------------------ | ---------------------------------------------------------------------------------- |
+| Request tới index.php   | Web server chuyển request vào public/index.php.                                  |
 | Khởi động framework   | Load autoload Composer và boot Laravel. Chuyển request vào Kernel để xử lý. |
-| HTTP Kernel xử lý     | Load service providers. Chạy qua các middleware.                            |
-| Route điều hướng      | Tìm route phù hợp để gọi controller.                                        |
-| Controller xử lý      | Logic chính, truy vấn model, validate, tính toán.                           |
-| Model làm việc với DB | Truy vấn DB, lưu hoặc cập nhật dữ liệu nếu cần.                             |
-| View (nếu có)         | Render giao diện với Blade hoặc trả JSON response.                          |
-| Response trả về       | Gửi kết quả cho client và kết thúc request.                                 |
-| Hoàn thành            | Laravel dừng xử lý và giải phóng tài nguyên.                                |
+| HTTP Kernel xử lý      | Load service providers. Chạy qua các middleware.                                 |
+| Route điều hướng     | Tìm route phù hợp để gọi controller.                                         |
+| Controller xử lý       | Logic chính, truy vấn model, validate, tính toán.                              |
+| Model làm việc với DB | Truy vấn DB, lưu hoặc cập nhật dữ liệu nếu cần.                           |
+| View (nếu có)          | Render giao diện với Blade hoặc trả JSON response.                             |
+| Response trả về        | Gửi kết quả cho client và kết thúc request.                                  |
+| Hoàn thành             | Laravel dừng xử lý và giải phóng tài nguyên.                               |
 
 ![lifecycle laravel](https://images.viblo.asia/b4bce647-722e-4064-ac19-b7e9e0d0573e.png)
 
@@ -537,6 +537,67 @@ Route::get('/fetch-data', function () {
 | **Độ phức tạp cài đặt**        | Hơi phức tạp (vì phải biên dịch Swoole và cấu hình thêm)                | **Dễ dàng hơn** (chỉ cần 1 file `rr` binary và cấu hình YAML)                                       |
 | **Hiệu suất**                       | Cực nhanh 🚀 (nhanh hơn PHP-FPM rất nhiều)                                     | Rất nhanh ⚡ (không nhanh bằng Swoole trong tác vụ bất đồng bộ, nhưng nhanh hơn PHP-FPM đáng kể)      |
 | **Trường hợp sử dụng phù hợp** | Real-time app, chat, thông báo live, game online, API cần tốc độ cao         | API REST service, microservice, app truyền thống cần hiệu năng tốt nhưng không cần real-time phức tạp   |
+
+# Gates và Policies
+
+**Gates** và **Policies** là hai cơ chế quan trọng để quản lý quyền truy cập ( **Authorization** ). Chúng giúp kiểm soát xem người dùng có quyền thực hiện một hành động nào đó hay không.
+
+## 1. **Gates (Cổng)**
+
+* Gates là các hàm đơn giản để xác định quyền.
+* Chúng được định nghĩa trong `App\Providers\AuthServiceProvider`.
+* Gates phù hợp cho các trường hợp không liên quan đến một model cụ thể.
+* Mặc định truyền dữ liệu vào là user đã đăng nhập
+* Có thể sử dụng trong controller, middleware hoặc blade
+
+## 2. **Policies (Chính sách)**
+
+* Policies là các class chuyên biệt để kiểm soát quyền trên một model cụ thể.
+* Chúng được sử dụng khi cần phân quyền dựa trên từng bản ghi của model.
+
+## **Khi nào dùng Gates và Policies?**
+
+| Tiêu chí        | Gates                                        | Policies                                |
+| ----------------- | -------------------------------------------- | --------------------------------------- |
+| Phù hợp với    | Quyền tổng quát (không liên quan model) | Quyền dựa trên model                 |
+| Cách triển khai | Hàm closure trong `AuthServiceProvider`   | Class riêng biệt                      |
+| Ví dụ           | Quyền truy cập trang admin                 | Chỉ tác giả có thể sửa bài viết |
+
+
+
+# Laravel Passport hoặc Laravel Sanctum
+
+### **1. Khi nào nên dùng Laravel Passport?**
+
+Passport phù hợp khi bạn cần hệ thống xác thực mạnh mẽ với OAuth2, đặc biệt là trong các ứng dụng lớn, microservices hoặc có nhiều loại client khác nhau.
+
+✅ Dùng Laravel Passport khi:
+
+* Cần **OAuth2** (chuẩn công nghiệp cho xác thực API).
+* Có ứng dụng **đa nền tảng** (SPA, mobile, web, microservices).
+* Cần **mã thông báo truy cập lâu dài** (long-lived access tokens).
+* Cần cấp **Client Credentials Tokens** hoặc  **Personal Access Tokens** .
+* Cần **refresh token** để lấy access token mới mà không yêu cầu người dùng đăng nhập lại.
+
+📌 **Ví dụ:** Ứng dụng mobile và web đều truy cập API chung, hoặc một hệ thống có nhiều service giao tiếp với nhau.
+
+### **2. Khi nào nên dùng Laravel Sanctum?**
+
+Sanctum nhẹ hơn, dễ triển khai hơn và phù hợp với các ứng dụng SPA hoặc mobile có backend Laravel.
+
+✅ Dùng Laravel Sanctum khi:
+
+* Xây dựng **Single Page Application (SPA)** hoặc **mobile app** cần xác thực API.
+* Không cần OAuth2, chỉ cần **token đơn giản** hoặc  **cookie-based authentication** .
+* Cần xác thực người dùng theo phiên (session-based authentication).
+* Cần một hệ thống  **bảo mật API đơn giản** , dễ tích hợp với frontend.
+
+📌 **Ví dụ:** Một ứng dụng React/VueJS dùng API Laravel để xác thực user mà không cần OAuth2.
+
+### **Tóm lại:**
+
+* Nếu bạn cần  **OAuth2** , dùng  **Passport** .
+* Nếu chỉ cần xác thực API đơn giản, dùng  **Sanctum** .
 
 # Câu hỏi thường gặp
 

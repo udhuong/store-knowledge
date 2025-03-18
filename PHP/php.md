@@ -1,10 +1,8 @@
 ## PHP là gì?
 
-PHP Là Ngôn Ngữ Thông Dịch (Interpreted Language)
-
-Ngôn ngữ thông dịch (Interpreted Language) là loại ngôn ngữ mà mã nguồn được thực thi từng dòng một, thay vì được biên dịch toàn bộ trước khi chạy như ngôn ngữ biên dịch (Compiled Language, ví dụ: C, Java).
-
-PHP có thể nhúng trực tiếp vào HTML.
+* PHP Là Ngôn Ngữ Thông Dịch (Interpreted Language)
+* Ngôn ngữ thông dịch là loại ngôn ngữ được thực thi từng dòng một, khi nào chạy mới biên dịch
+* PHP có thể nhúng trực tiếp vào HTML.
 
 ## PHP-FPM
 
@@ -14,27 +12,22 @@ PHP có thể nhúng trực tiếp vào HTML.
 - Cần kết hợp với web server như Nginx hoặc Apache!
 
 **PHP-FPM hoạt động thế nào?**
-Web server nhận request:
 
-- Khi có request đến (ví dụ: /home), Nginx/Apache nhận yêu cầu trước.
-
-Gửi request qua FastCGI:
-
-- Web server không trực tiếp chạy PHP mà sẽ gửi request qua FastCGI bằng Unix socket hoặc TCP tới PHP-FPM.
-
-PHP-FPM xử lý request:
-
-- PHP-FPM có nhiều process worker để chạy mã PHP.
-- Mỗi request sẽ được giao cho 1 worker.
-- Worker sẽ boot framework, chạy mã PHP, truy vấn DB, xử lý logic, rồi trả lại kết quả.
-
-Trả kết quả về web server:
-
-- Worker xử lý xong thì trả response về web server, rồi từ đó trả lại cho trình duyệt.
-- Sau khi hoàn thành request, PHP-FPM hủy worker process (giải phóng bộ nhớ, kết nối DB, cache...).
+- Web server nhận request:
+  - Khi có request đến (ví dụ: /home), Nginx/Apache nhận yêu cầu trước.
+- Gửi request qua FastCGI:
+  - Web server không trực tiếp chạy PHP mà sẽ gửi request qua FastCGI bằng Unix socket hoặc TCP tới PHP-FPM.
+- PHP-FPM xử lý request:
+  - PHP-FPM có nhiều process worker để chạy mã PHP.
+  - Mỗi request sẽ được giao cho 1 worker.
+  - Worker sẽ boot framework, chạy mã PHP, truy vấn DB, xử lý logic, rồi trả lại kết quả.
+- Trả kết quả về web server:
+  - Worker xử lý xong thì trả response về web server, rồi từ đó trả lại cho trình duyệt.
+  - Sau khi hoàn thành request, PHP-FPM hủy worker process (giải phóng bộ nhớ, kết nối DB, cache...).
 
 **Luồng đi**
-User -> Nginx -> PHP-FPM -> Laravel -> MySQL/Redis -> Laravel -> PHP-FPM -> Nginx -> User
+
+- User -> Nginx -> PHP-FPM -> Laravel -> MySQL/Redis -> Laravel -> PHP-FPM -> Nginx -> User
 
 **Ưu điểm của PHP-FPM:**
 
@@ -55,12 +48,12 @@ User -> Nginx -> PHP-FPM -> Laravel -> MySQL/Redis -> Laravel -> PHP-FPM -> Ngin
 - Hệ thống đã quen dùng Nginx/Apache, chưa muốn thay đổi hạ tầng lớn.
 - Cần ổn định, dễ bảo trì, không quá quan tâm đến từng ms tốc độ.
 
-> PHP-FPM và RoadRunner đều dùng worker pool, nhưng PHP-FPM tạo-hủy worker liên tục còn RoadRunner thì giữ worker sống lâu dài và không boot lại Laravel mỗi request.
+**PHP-FPM và RoadRunner đều dùng worker pool, nhưng PHP-FPM tạo-hủy worker liên tục còn RoadRunner thì giữ worker sống lâu dài và không boot lại Laravel mỗi request.**
 
-## Swoole và roadrunner
+## Swoole và RoadRunner
 
 - Gọi là application server
-- đều là công cụ mạnh mẽ giúp tăng tốc Laravel (hoặc các framework PHP khác) bằng cách loại bỏ PHP-FPM truyền thống và tối ưu xử lý request!
+- Đều là công cụ mạnh mẽ giúp tăng tốc Laravel (hoặc các framework PHP khác) bằng cách loại bỏ PHP-FPM truyền thống và tối ưu xử lý request!
 - Với Swoole — PHP như ngôn ngữ async hiện đại!
 
 Application Server cho PHP:
