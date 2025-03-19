@@ -563,6 +563,10 @@ Route::get('/fetch-data', function () {
 | Cách triển khai | Hàm closure trong `AuthServiceProvider`   | Class riêng biệt                      |
 | Ví dụ           | Quyền truy cập trang admin                 | Chỉ tác giả có thể sửa bài viết |
 
+# IoC (Inversion of Control) - Đảo ngược quyền điều khiển
+
+
+# DI (Dependency Injection) - Tiêm phụ thuộc
 
 
 # Laravel Passport hoặc Laravel Sanctum
