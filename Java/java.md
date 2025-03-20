@@ -162,11 +162,103 @@ Các class triển khai  **Queue** :
 
 ### Garbage Collector
 
-| Phương thức chính |
-| --------------------- |
+**Garbage Collector (GC) trong Java** là một cơ chế **tự động thu hồi bộ nhớ** của **các object không còn được sử dụng** để  **giải phóng RAM và tối ưu hiệu suất chương trình** .
 
-|  |
-| - |
+📌 **Java sử dụng GC để quản lý bộ nhớ heap và tránh memory leak.**
+
+📌 **Lập trình viên không cần giải phóng bộ nhớ thủ công như trong C/C++.**
+
+### Bộ nhớ Heap
+
+#### **Bộ nhớ Heap là gì?**
+
+📌 **Heap Memory** là vùng bộ nhớ  **dùng để lưu trữ object trong Java** .
+
+📌 **Bất kỳ object nào được tạo bằng từ khóa `new` sẽ nằm trong Heap.**
+
+📌 **Bộ nhớ Heap được quản lý bởi Garbage Collector (GC)** để thu hồi object không còn sử dụng.
+
+🔥 **Đặc điểm của Heap Memory:**
+
+✅ Chứa object có thể được **chia sẻ** giữa các thread.
+
+✅ Khi không còn tham chiếu, GC sẽ thu hồi để tránh memory leak.
+
+✅ Tự động mở rộng nếu cần (lên đến giới hạn tối đa `-Xmx`).
+
+```java
+class Person {
+    String name;
+
+    public Person(String name) {
+        this.name = name;
+    }
+}
+
+public class HeapExample {
+    public static void main(String[] args) {
+        Person p1 = new Person("Alice");  // Object "Alice" nằm trong Heap
+        Person p2 = new Person("Bob");    // Object "Bob" cũng nằm trong Heap
+    }
+}
+
+```
+
+**Heap Memory được chia thành 3 phần chính** để tối ưu quản lý bộ nhớ:
+
+| **Vùng Heap**               | **Chức năng**                                                  |
+| ---------------------------------- | ---------------------------------------------------------------------- |
+| **Young Generation**         | Chứa object mới tạo, GC chạy thường xuyên.                      |
+| **Old Generation (Tenured)** | Chứa object tồn tại lâu dài. GC chạy ít hơn nhưng chậm hơn. |
+| **Metaspace**                | Chứa thông tin class, method, không bị GC dọn dẹp.               |
+
+## **Heap vs Stack – Khác nhau thế nào?**
+
+| **Tiêu chí**           | **Heap**             | **Stack**                          |
+| ------------------------------ | -------------------------- | ---------------------------------------- |
+| **Dùng để lưu trữ** | Object (instance)          | Biến cục bộ, lời gọi hàm           |
+| **Quản lý bộ nhớ**   | Bởi Garbage Collector     | Quản lý tự động (LIFO)              |
+| **Tốc độ**            | Chậm hơn (GC thu hồi)   | Nhanh hơn (vì nhỏ và có cấu trúc) |
+| **Tầm vực biến**      | Object tồn tại lâu hơn | Biến sẽ bị xóa khi hàm kết thúc   |
+| **Lỗi phổ biến**      | OutOfMemoryError           | StackOverflowError                       |
+
+```java
+public class MemoryExample {
+    public static void main(String[] args) {
+        int x = 10;         // Lưu trong Stack
+        Person p = new Person("Alice");  // Object "Alice" lưu trong Heap
+    }
+}
+
+```
+
+🔥 **`x` nằm trong Stack, `p` nằm trong Heap. Khi hàm kết thúc, `x` bị xóa ngay, còn `p` chờ GC thu hồi.**
+
+✅ JVM yêu cầu OS cấp phát thêm RAM (nếu chưa đạt giới hạn `-Xmx`).
+
+✅ Nếu Heap đầy, JVM sẽ chạy GC để thu hồi bộ nhớ.
+
+✅ Nếu không còn bộ nhớ Heap và GC không thể giải phóng đủ, **Java sẽ bị lỗi `OutOfMemoryError:`**
+
+#### String Pool
+
+**String Pool** là một khu vực đặc biệt trong bộ nhớ Heap của Java, nơi các đối tượng `String` được lưu trữ để tối ưu hóa hiệu suất và giảm lãng phí bộ nhớ.
+
+**1. Cách hoạt động của String Pool**
+
+* Khi bạn tạo một `String` bằng cách sử dụng **literal** (chuỗi đặt trong dấu ngoặc kép), Java sẽ kiểm tra xem chuỗi đó đã có trong **String Pool** chưa.
+* Nếu có, nó sẽ trả về tham chiếu đến chuỗi có sẵn thay vì tạo một đối tượng mới.
+* Nếu chưa có, nó sẽ tạo một đối tượng `String` mới trong String Pool.
+
+**2. Lợi ích của String Pool**
+
+* **Tiết kiệm bộ nhớ:** Vì các chuỗi giống nhau sẽ được tái sử dụng.
+* **Cải thiện hiệu suất:** So sánh bằng `==` nhanh hơn so với `.equals()`.
+
+**3. Nhược điểm**
+
+* Nếu có quá nhiều chuỗi khác nhau, **String Pool** có thể chiếm nhiều bộ nhớ và gây ra  **OutOfMemoryError** .
+* Không thể thay đổi chuỗi sau khi đã được đặt trong Pool do tính **immutable** của `String`.
 
 ### Exception
 
@@ -411,7 +503,6 @@ Starvation: khi một **luồng liên tục bị trì hoãn** vì  **các luồn
 * Muốn tận dụng khả năng giành khóa nhanh của non-fair mode.
 * Chỉ có một số ít luồng truy cập khóa.
 
-
 ## Các cơ chế đồng bộ luồng
 
 | Cơ chế                                    | Cách hoạt động                                                                  | Khi nào dùng                                                                                                                                         | Ưu điểm                                                             | Nhược điểm                                                                              |
@@ -545,7 +636,6 @@ public class SemaphoreExample {
 }
 ```
 
-
 ## An Toàn Luồng (Thread Safety)
 
 **Định nghĩa:**
@@ -562,7 +652,6 @@ An toàn luồng có nghĩa là chương trình có thể chạy song song nhi�
 | **`Concurrent Collections`** | Hiệu suất cao, không cần khóa toàn bộ                         | Tốn bộ nhớ hơn `HashMap`,`ArrayList`                                      | Khi dùng danh sách, hàng đợi trong môi trường đa luồng  |
 | **`ThreadLocal`**            | Biến riêng cho từng luồng, không cần đồng bộ                | Khó quản lý bộ nhớ, dễ gây memory leak                                     | Khi mỗi luồng cần lưu dữ liệu riêng (Session, Transaction) |
 
-
 ### So Sánh Các Collections Trong Đa Luồng vs Không Đa Luồng
 
 | **Loại Collection** | **Không Hỗ Trợ Đa Luồng** | **Hỗ Trợ Đa Luồng (Thread-Safe)**                           |
@@ -571,7 +660,6 @@ An toàn luồng có nghĩa là chương trình có thể chạy song song nhi�
 | **List**             | `ArrayList`,`LinkedList`         | `CopyOnWriteArrayList`                                              |
 | **Set**              | `HashSet`,`TreeSet`              | `ConcurrentSkipListSet`,`CopyOnWriteArraySet`                     |
 | **Map**              | `HashMap`,`TreeMap`              | `ConcurrentHashMap`,`ConcurrentSkipListMap`                       |
-
 
 #### **Queue – Hàng Đợi Thread-Safe**
 
@@ -634,8 +722,280 @@ An toàn luồng có nghĩa là chương trình có thể chạy song song nhi�
 
 📌 **Ưu điểm:** Không cần dùng `synchronized`, giúp truy cập dữ liệu an toàn và nhanh hơn trong môi trường đa luồng.
 
-
 ### CompletableFuture
 
+`CompletableFuture` là một API mạnh mẽ trong Java  **8+** , giúp **xử lý tác vụ bất đồng bộ** mà không cần quản lý thủ công `Thread` hoặc `ExecutorService`.
+
+📌 **Tại sao nên dùng?**
+
+* ✅ **Viết code ngắn gọn hơn** so với `Future`.
+* ✅ **Không cần chờ đợi thủ công** (`get()` trong `Future` có thể bị block).
+* ✅ **Hỗ trợ callback** (`thenApply`, `thenAccept`, `thenRun`).
+* ✅ **Dễ dàng kết hợp nhiều tác vụ song song** (`thenCombine`, `thenCompose`).
+* ✅ **Hỗ trợ xử lý ngoại lệ** (`exceptionally`, `handle`).
+
+#### **Tổng quan các phương thức của `CompletableFuture`**
+
+| **Loại tác vụ**                         | **Phương thức**                                | **Mô tả**                                                                                               | **Khi nào sử dụng?**                                                                                                         |
+| ------------------------------------------------ | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **Chạy tác vụ không có kết quả**    | `runAsync(Runnable)`                                  | Chạy một tác vụ bất đồng bộ mà**không có giá trị trả về**                                  | Khi chỉ cần thực hiện hành động như ghi log, gửi email, gọi API mà không cần kết quả                                   |
+| **Chạy tác vụ có kết quả**           | `supplyAsync(Supplier<T>)`                            | Chạy một tác vụ bất đồng bộ và**trả về kết quả**                                             | Khi cần thực hiện một tác vụ có giá trị trả về như tính toán, lấy dữ liệu từ DB, gọi API                           |
+| **Xử lý kết quả**                      | `thenApply(Function<T, R>)`                           | **Chuyển đổi giá trị**của `CompletableFuture`                                                     | Khi cần**biến đổi giá trị**nhận được từ một tác vụ trước                                                        |
+|                                                  | `thenAccept(Consumer<T>)`                             | Nhận kết quả nhưng**không trả về gì**                                                             | Khi chỉ cần thực hiện hành động như ghi log, gửi thông báo, nhưng không cần thay đổi giá trị                        |
+|                                                  | `thenRun(Runnable)`                                   | Chạy tiếp một tác vụ**mà không nhận giá trị trước đó**                                      | Khi chỉ cần chạy tiếp một tác vụ độc lập sau khi hoàn thành                                                               |
+| **Kết hợp nhiều `CompletableFuture`** | `thenCombine(CompletableFuture, BiFunction<T, U, R>)` | Kết hợp kết quả từ hai `CompletableFuture` **độc lập**                                          | Khi cần tổng hợp dữ liệu từ hai nguồn khác nhau (ví dụ: API 1 trả về user, API 2 trả về order)                          |
+|                                                  | `thenCompose(Function<T, CompletableFuture<R>>)`      | Dùng kết quả của `CompletableFuture`này để tạo `CompletableFuture`khác                             | Khi tác vụ sau**phụ thuộc**vào kết quả của tác vụ trước (ví dụ: lấy user xong rồi dùng userID để lấy order) |
+| **Chạy nhiều tác vụ song song**        | `allOf(CompletableFuture...)`                         | Chạy**nhiều `CompletableFuture`cùng lúc**và**chờ tất cả hoàn thành**                    | Khi cần đợi tất cả tác vụ hoàn thành trước khi tiếp tục (ví dụ: tải nhiều tệp một lúc)                            |
+|                                                  | `anyOf(CompletableFuture...)`                         | Chạy**nhiều `CompletableFuture`cùng lúc**và**trả về kết quả đầu tiên hoàn thành**   | Khi chỉ cần một kết quả đầu tiên (ví dụ: gửi request đến nhiều server và lấy response nhanh nhất)                    |
+| **Xử lý lỗi**                           | `exceptionally(Function<Throwable, T>)`               | Bắt lỗi và**trả về giá trị thay thế**nếu có lỗi                                                | Khi muốn đảm bảo chương trình không bị crash nếu có lỗi xảy ra                                                           |
+|                                                  | `handle(BiFunction<T, Throwable, R>)`                 | Xử lý cả**lỗi và kết quả**(có lỗi thì xử lý, không lỗi thì dùng giá trị bình thường) | Khi muốn kiểm tra lỗi nhưng vẫn sử dụng kết quả nếu không có lỗi                                                         |
+
+📌 **Ghi chú:**
+
+* Các phương thức có thể kết hợp để tạo pipeline xử lý bất đồng bộ hiệu quả.
+* Sử dụng `ExecutorService` khi muốn kiểm soát số lượng luồng chạy trong `CompletableFuture`.
 
 ### ExecutorService
+
+`ExecutorService` là một interface trong `java.util.concurrent` giúp quản lý **Thread Pool** hiệu quả.
+
+* ✔ Thay vì tạo và quản lý từng `Thread` thủ công, `ExecutorService` giúp  **tái sử dụng luồng** , cải thiện hiệu suất.
+* ✔ Hỗ trợ **bất đồng bộ** bằng cách chạy các tác vụ trong nền.
+* ✔ Hỗ trợ  **lập lịch** ,  **giới hạn số luồng** ,  **tắt luồng khi không sử dụng** .
+
+| **Phương thức**               | **Mô tả**                                                                | **Ưu điểm**                                           | **Nhược điểm**                                | **Khi nào dùng?**                                                                   |
+| -------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `newFixedThreadPool(n)`              | Tạo Thread Pool với `n`luồng cố định.                                    | Kiểm soát số luồng, tránh quá tải.                      | Có thể gây chờ đợi nếu tất cả luồng bận.     | Khi số lượng task ổn định.                                                            |
+| `newCachedThreadPool()`              | Tạo Thread Pool có kích thước**động** .                             | Tạo luồng nhanh, xử lý tốt task ngắn hạn.               | Dễ gây quá tải nếu số luồng quá lớn.           | Khi task có tần suất thay đổi liên tục.                                              |
+| `newSingleThreadExecutor()`          | Chỉ có**một luồng duy nhất** , chạy tuần tự.                       | Đảm bảo thứ tự thực thi, tránh race condition.          | Hiệu suất thấp nếu có nhiều task.                 | Khi cần chạy task theo thứ tự.                                                          |
+| `newScheduledThreadPool(n)`          | Tạo Pool có thể lập lịch chạy task định kỳ.                             | Hỗ trợ**lập lịch chạy**sau một khoảng thời gian. | Tốn tài nguyên nếu nhiều task chạy liên tục.    | Khi cần chạy task định kỳ hoặc theo thời gian.                                       |
+| `newSingleThreadScheduledExecutor()` | Tương tự `newScheduledThreadPool()`, nhưng chỉ có **1 luồng** .   | Đảm bảo các task chạy tuần tự theo lịch trình.        | Chạy chậm nếu có nhiều task cần lập lịch.       | Khi cần lên lịch task nhưng chỉ muốn chạy từng task một.                           |
+| `newWorkStealingPool(n)`             | Tận dụng CPU đa nhân,**tự động đánh cắp task**giữa các luồng. | Tối ưu hiệu suất cho nhiều task nhỏ.                     | Không kiểm soát được số lượng luồng.          | Khi có**rất nhiều task nhỏ**cần xử lý đồng thời.                            |
+| `newThreadPerTaskExecutor()`         | Tạo một luồng riêng cho**mỗi task** .                                 | Đơn giản, dễ dùng cho task độc lập.                    | Tốn tài nguyên hệ thống nếu có quá nhiều task. | Khi mỗi task cần chạy trên một luồng riêng.                                          |
+| `newVirtualThreadPerTaskExecutor()`  | Tạo**Virtual Thread** , siêu nhẹ, có thể tạo hàng triệu luồng.    | Hiệu suất cao, không bị giới hạn số luồng.             | Chỉ hỗ trợ từ Java 19+.                             | Khi cần xử lý**rất nhiều task song song**mà không bị giới hạn tài nguyên. |
+
+### CompletableFuture và ExecutorService
+
+Kết hợp `CompletableFuture` với `ExecutorService` để  **tối ưu hiệu suất** , **kiểm soát số lượng luồng** và  **tùy chỉnh hành vi thực thi** . Dưới đây là các cách sử dụng phổ biến.
+
+#### **Sử dụng `ExecutorService` trong `supplyAsync()` và `runAsync()`**
+
+Mặc định, `CompletableFuture.supplyAsync()` và `CompletableFuture.runAsync()` sử dụng  **ForkJoinPool.commonPool().**
+
+```java
+import java.util.concurrent.*;
+
+public class CompletableFutureWithExecutor {
+    public static void main(String[] args) {
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+
+        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+            System.out.println(Thread.currentThread().getName() + " - Fetching data...");
+            return "Data received";
+        }, executor);
+
+        future.thenAccept(result -> 
+            System.out.println(Thread.currentThread().getName() + " - Result: " + result)
+        );
+
+        executor.shutdown();
+    }
+}
+```
+
+#### Kết hợp nhiều tác vụ với ExecutorService
+
+```java
+import java.util.concurrent.*;
+
+public class MultiTaskExample {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+
+        CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
+            return "Task 1 completed";
+        }, executor);
+
+        CompletableFuture<String> task2 = CompletableFuture.supplyAsync(() -> {
+            return "Task 2 completed";
+        }, executor);
+
+        CompletableFuture<String> task3 = CompletableFuture.supplyAsync(() -> {
+            return "Task 3 completed";
+        }, executor);
+
+        CompletableFuture<Void> allTasks = CompletableFuture.allOf(task1, task2, task3);
+
+        allTasks.join(); // Đợi tất cả tác vụ hoàn thành
+
+        System.out.println(task1.get());
+        System.out.println(task2.get());
+        System.out.println(task3.get());
+
+        executor.shutdown();
+    }
+}
+
+```
+
+#### Xử lý nhiều task và trả về list kết quả
+
+```java
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class CompletableFutureListExample {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+
+        // Tạo danh sách các CompletableFuture
+        List<CompletableFuture<String>> futures = List.of(
+            CompletableFuture.supplyAsync(() -> "Task 1 completed", executor),
+            CompletableFuture.supplyAsync(() -> "Task 2 completed", executor),
+            CompletableFuture.supplyAsync(() -> "Task 3 completed", executor)
+        );
+
+        // Chờ tất cả hoàn thành và thu thập kết quả vào List
+        CompletableFuture<List<String>> allTasks = CompletableFuture
+            .allOf(futures.toArray(new CompletableFuture[0])) // Chạy song song
+            .thenApply(v -> futures.stream()
+                .map(CompletableFuture::join) // Lấy kết quả từ mỗi CompletableFuture
+                .collect(Collectors.toList()) // Thu thập vào danh sách
+            );
+
+        // Lấy kết quả cuối cùng
+        List<String> results = allTasks.get();
+        System.out.println(results);
+
+        executor.shutdown();
+    }
+}
+
+```
+
+**Giải thích cách hoạt động**
+
+1. **Tạo danh sách `CompletableFuture`** , mỗi tác vụ chạy song song trên `ExecutorService`.
+2. **Sử dụng `CompletableFuture.allOf()`** để chờ tất cả các task hoàn thành.
+3. **Dùng `thenApply()` để thu thập kết quả** :
+
+* `futures.stream().map(CompletableFuture::join).collect(Collectors.toList())`
+* `join()` lấy kết quả của từng `CompletableFuture` (tương tự `get()` nhưng không cần `throws Exception`).
+
+**Sử dụng `.get()` trên `allTasks`** để lấy danh sách kết quả cuối cùng.
+
+### Reflection
+
+Reflection trong Java cho phép truy cập và thao tác với **class, field, method, constructor** trong  **runtime** , ngay cả khi không biết trước tên class hoặc method.
+
+| **Tác vụ**           | **Reflection API**                                  |
+| ---------------------------- | --------------------------------------------------------- |
+| Lấy class của một object  | `Class<?> clazz = obj.getClass();`                      |
+| Lấy danh sách fields       | `clazz.getDeclaredFields()`                             |
+| Lấy danh sách methods      | `clazz.getDeclaredMethods()`                            |
+| Truy cập field private      | `field.setAccessible(true); field.get(obj);`            |
+| Gọi method private          | `method.setAccessible(true); method.invoke(obj, args);` |
+| Tạo object bằng Reflection | `constructor.newInstance(args);`                        |
+| Kiểm tra annotation         | `method.isAnnotationPresent(MyAnnotation.class);`       |
+
+### Biến và static trong java
+
+Trong Java, từ khóa `static` giúp  **gán thuộc tính hoặc phương thức cho class thay vì object** , có nghĩa là  **chúng thuộc về class chứ không phải instance** .
+
+#### **Biến `static` (Static Variable)**
+
+**📌 Đặc điểm:**
+
+✔ Thuộc về **class** thay vì object.
+
+✔ **Dùng chung** cho tất cả instance của class.
+
+✔ Được tạo **một lần duy nhất** khi class được load vào bộ nhớ.
+
+#### **Hàm `static` (Static Method)**
+
+**📌 Đặc điểm:**
+
+✔ Có thể gọi mà  **không cần tạo object** .
+
+✔ **Chỉ có thể truy cập biến `static`** (không truy cập biến instance).
+
+✔ Không thể dùng `this` hoặc `super` trong `static method`.
+
+#### **Static Block (`static {}`)**
+
+**📌 Đặc điểm:**
+
+✔ Được chạy  **một lần duy nhất khi class được load vào bộ nhớ** .
+
+✔ Dùng để  **khởi tạo biến `static` phức tạp** .
+
+#### **Static Class (Nested Static Class)**
+
+**📌 Đặc điểm:**
+
+✔ Một class  **bên trong một class khác** , có từ khóa `static`.
+
+✔  **Không thể truy cập biến non-static của outer class** .
+
+✔ Có thể gọi trực tiếp mà không cần tạo object outer class.
+
+#### **Sự khác nhau giữa `static` và non-static**
+
+| Đặc điểm             | `static`                                                         | Non-`static`                       |
+| ------------------------ | ------------------------------------------------------------------ | ------------------------------------ |
+| Thuộc về               | **Class**                                                    | **Object (instance)**          |
+| Truy cập                | Gọi trực tiếp bằng `ClassName.staticMethod()`                | Phải tạo object để gọi          |
+| Biến                    | Dùng chung cho mọi object                                        | Mỗi object có bản sao riêng      |
+| Dùng `this`/`super` | ❌ Không thể                                                     | ✅ Có thể                          |
+| Khi nào dùng?          | **Hàm tiện ích** , biến dùng chung (counter, config...) | Khi mỗi object có dữ liệu riêng |
+
+### Servlet
+
+Servlet là một thành phần của **Java EE** dùng để xử lý **request từ client (thường là trình duyệt)** và trả về  **response từ server** .
+
+### JDBC (Java Database Connectivity)
+
+**JDBC** là  **API chuẩn của Java giúp kết nối và làm việc với database** .
+
+📌 **JDBC giúp Java giao tiếp với database bằng cách gửi SQL và nhận kết quả.**
+
+📌 **Có thể làm việc với nhiều loại database như MySQL, PostgreSQL, Oracle, SQL Server, v.v.**
+
+📌 **Cần viết SQL thủ công để thao tác với dữ liệu.**
+
+🔥 **Dùng JDBC khi:**
+
+✅ Cần truy vấn dữ liệu từ database.
+
+✅ Cần thao tác CRUD (Create, Read, Update, Delete).
+
+✅ Cần hiệu suất cao hơn Hibernate/JPA trong một số trường hợp.
+
+### **JPA (Java Persistence API)**
+
+**Một chuẩn Java giúp lưu/truy vấn database bằng Object (ORM). Thường dùng với Hibernate (implementation phổ biến nhất).**
+
+📌  **JPA KHÔNG phải là một thư viện/framework cụ thể** , mà nó là  **một giao diện chuẩn** . Các thư viện như **Hibernate, EclipseLink, OpenJPA** chính là các  **JPA implementation (triển khai)** .
+
+📌  **JPA chỉ là quy chuẩn** , còn **Hibernate là thư viện cụ thể** giúp JPA hoạt động.
+
+**JPA giúp gì cho lập trình viên?**
+
+🔥 **Không cần viết SQL thủ công**
+
+🔥 **Làm việc với database bằng Java object (Entity)**
+
+🔥 **Tự động ánh xạ bảng → class, cột → thuộc tính**
+
+🔥 **Dễ dàng chuyển đổi giữa các loại database (MySQL, PostgreSQL, Oracle, v.v.)**
+
+🔥 **Tích hợp tốt với Spring Boot**
+
+### Hibernate
+
+**Hibernate** là  **một thư viện ORM mạnh mẽ cho Java** , giúp **làm việc với database mà không cần viết SQL thủ công** .
+
+**Nó là một implementation (triển khai) của JPA** – nghĩa là Hibernate thực thi các quy tắc của JPA nhưng cũng có nhiều tính năng nâng cao hơn.
