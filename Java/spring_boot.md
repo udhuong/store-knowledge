@@ -50,8 +50,6 @@ Khi một request được gửi đến Spring MVC, nó sẽ trải qua các bư
 | **Tạo Bean `HandlerMapping`**     | Cần khai báo trong `@Configuration`               | Spring Boot tự động cấu hình            |
 | **Trả về JSON/XML**                | Cần cấu hình `Jackson`hoặc `MessageConverter` | Spring Boot tự động chuyển đổi         |
 
-
-
 # IoC (Inversion of Control) - Đảo ngược quyền điều khiển
 
 **IoC (Inversion of Control)** là một nguyên tắc lập trình giúp đảo ngược quyền kiểm soát việc khởi tạo dependencies.
@@ -74,7 +72,6 @@ Spring chịu trách nhiệm tạo và cung cấp `UserRepository` mà không c�
 
 ✅ Hỗ trợ `final` để đảm bảo biến không bị thay đổi sau khi khởi tạo.
 
-
 **2️⃣ Setter Injection**
 
 💡  **Ưu điểm** :
@@ -83,7 +80,6 @@ Spring chịu trách nhiệm tạo và cung cấp `UserRepository` mà không c�
 
 ❌  **Nhược điểm** : Không đảm bảo dependency luôn có giá trị (có thể bị set `null`).
 
-
 **3️⃣ Field Injection (Không khuyến khích)**
 
 💡  **Nhược điểm** :
@@ -91,7 +87,6 @@ Spring chịu trách nhiệm tạo và cung cấp `UserRepository` mà không c�
 ❌ Khó kiểm thử vì không thể inject dependency từ bên ngoài.
 
 ❌ Không thể đánh dấu `final`, khiến đối tượng có thể bị thay đổi.
-
 
 # **IoC Container là gì?**
 
@@ -104,7 +99,6 @@ Spring chịu trách nhiệm tạo và cung cấp `UserRepository` mà không c�
 ✅ Giảm sự phụ thuộc giữa các class ( **Loose Coupling** ).
 
 ✅ Dễ dàng thay đổi, mở rộng, và test code ( **Maintainability & Testability** ).
-
 
 # Bean Factory và Application Context
 
@@ -159,8 +153,6 @@ Spring hỗ trợ nhiều **scope** để kiểm soát vòng đời của Bean.
 | **session**(Chỉ dùng với Web App)     | Một instance cho mỗi HTTP session                     | Lưu dữ liệu user theo session               |
 | **application**(Chỉ dùng với Web App) | Một instance chung cho toàn bộ ứng dụng            | Giống singleton nhưng chỉ trong context web |
 
-
-
 # @PostConstruct trong Spring là gì?
 
 `@PostConstruct` là một annotation trong Java (thuộc `javax.annotation`), được Spring sử dụng để đánh dấu  **một method sẽ tự động chạy sau khi bean được khởi tạo và dependency injection hoàn tất** .
@@ -175,7 +167,6 @@ Spring hỗ trợ nhiều **scope** để kiểm soát vòng đời của Bean.
 
 `@PostConstruct` sẽ  **không hoạt động trong Spring Boot 3+** . **Cách thay thế:** Dùng `@EventListener(ApplicationReadyEvent.class)` . Phương thức này chạy ngay khi Spring Boot hoàn tất khởi tạo Bean.
 
-
 # AOP
 
 **AOP (Aspect-Oriented Programming - Lập trình hướng khía cạnh)** là một kỹ thuật lập trình giúp **tách biệt các chức năng phụ trợ (cross-cutting concerns)** ra khỏi logic chính của ứng dụng.
@@ -185,7 +176,6 @@ Spring hỗ trợ nhiều **scope** để kiểm soát vòng đời của Bean.
 **Vì sao cần AOP?**
 
 **AOP giúp tách các chức năng này** ra khỏi logic chính của ứng dụng, giúp code  **gọn gàng, dễ mở rộng và dễ bảo trì** .
-
 
 # @Anotation
 
@@ -205,12 +195,10 @@ public @interface LogExecutionTime {
 }
 ```
 
-
 # **SpEL** (Spring Expression Language)
 
 Trong Spring, **SpEL** (Spring Expression Language) là một ngôn ngữ biểu thức mạnh mẽ được sử dụng để truy vấn, thao tác dữ liệu hoặc thực hiện các phép tính tại runtime, cho phép bạn viết các biểu thức linh hoạt để xử lý logic.
 
 SpEL là một công cụ rất linh hoạt trong Spring, giúp bạn xử lý logic động mà không cần viết mã cứng (hardcode).
-
 
 # Spring Data
