@@ -1,4 +1,4 @@
-# **Kafka là gì?**
+## **Kafka là gì?**
 
 ![alt](https://images.viblo.asia/44c303f8-2857-4c81-9e3c-0afbec8d4372.png)
 
@@ -26,7 +26,7 @@ Kafka có một kiến trúc dựa trên **pub-sub (publish-subscribe)** và bao
 * **Event sourcing** : Ghi lại mọi sự kiện trong hệ thống để phân tích hoặc khôi phục trạng thái.
 * **Log aggregation** : Thu thập và phân tích log từ nhiều nguồn khác nhau.
 
-# **Kafka Producer**
+## **Kafka Producer**
 
 Kafka **Producer** là thành phần chịu trách nhiệm **gửi dữ liệu (messages/events)** vào Kafka  **topics** .
 
@@ -49,7 +49,7 @@ Kafka **Producer** là thành phần chịu trách nhiệm **gửi dữ liệu (
 * **Retries** : Tự động thử lại nếu gặp lỗi mạng hoặc lỗi server.
 * **Idempotent Producer** : Đảm bảo không gửi trùng lặp message trong trường hợp lỗi.
 
-# **Kafka Consumer**
+## **Kafka Consumer**
 
 Kafka **Consumer** là thành phần chịu trách nhiệm **nhận và xử lý dữ liệu** từ Kafka  **topics** .
 
@@ -76,7 +76,7 @@ Kafka **Consumer** là thành phần chịu trách nhiệm **nhận và xử lý
 * `false`: Developer tự kiểm soát offset (tốt hơn để tránh mất dữ liệu).
 * **group.id** : ID của Consumer Group.
 
-# Serialization / Deserialization
+## Serialization / Deserialization
 
 * **Serialization** : Quá trình **biến đổi dữ liệu (Object, Struct, JSON, etc.) thành byte** để có thể gửi qua mạng hoặc lưu trữ.
 * **Deserialization** : Quá trình **chuyển đổi byte thành dữ liệu gốc** để có thể sử dụng trong ứng dụng.
@@ -89,7 +89,7 @@ Kafka **Consumer** là thành phần chịu trách nhiệm **nhận và xử lý
 | **Avro**     | Nhẹ, hỗ trợ Schema Evolution   | Cần Schema Registry, khó debug hơn JSON         |
 | **Protobuf** | Hiệu suất cao, mạnh hơn Avro  | Cần Google Protocol Buffers, khó đọc hơn JSON |
 
-# Quản lý Offset
+## Quản lý Offset
 
 **Offset** là một số thứ tự đánh dấu vị trí của message trong một **Partition** của Kafka. Mỗi message trong Kafka đều có một **offset duy nhất** trong Partition của nó.
 
@@ -149,7 +149,7 @@ Reset Offset bằng CLI:
 * Reset về offset cụ thể
 * Reset về timestamp cụ thể (Dựa vào thời gian gửi message)
 
-# Stateful & Stateless Processing
+## Stateful & Stateless Processing
 
 Trong **Kafka Streams** và hệ thống xử lý dữ liệu nói chung, có hai loại xử lý chính:
 
@@ -170,7 +170,7 @@ Trong **Kafka Streams** và hệ thống xử lý dữ liệu nói chung, có ha
 * Cần cửa sổ thời gian (windowing).
 * Cần join dữ liệu từ nhiều topic.
 
-# Tối ưu & Triển khai Kafka
+## Tối ưu & Triển khai Kafka
 
 ## Kafka Cluster
 
@@ -201,7 +201,7 @@ Zookeeper là thành phần  **quản lý Kafka Cluster** , bao gồm:
 * Quản lý **leader election** (chọn broker nào làm leader khi broker cũ bị lỗi).
 * Lưu trữ metadata (thông tin về topic, partitions, leader...).
 
-# Consumer Group
+## Consumer Group
 
 ### **Định nghĩa**
 
@@ -274,9 +274,7 @@ Mỗi consumer phải có một **Consumer Group ID** để Kafka biết nó thu
 | **Cân bằng tải**      | Có, Kafka tự động phân chia partitions.                           | Không có, vì chỉ có một consumer.            |
 | **Chống lỗi**          | Nếu một consumer chết, Kafka tự động phân chia lại partitions. | Nếu consumer chết, không có cơ chế failover. |
 
-
-
-# Giảm lag message
+## Giảm lag message
 
 Khi Kafka bị **lag message** (LAG cao), tức là consumer không kịp đọc dữ liệu từ topic, dẫn đến backlog ngày càng lớn. Dưới đây là **các cách giảm message lag** trong Kafka:
 
@@ -383,19 +381,17 @@ Nếu message backlog quá lớn, có thể **reset offset** để đọc dữ l
 | **7. Tối ưu Kafka Broker**                  | Tăng throughput Kafka                                     |
 | **8. Reset Offset nếu cần**                 | Bỏ backlog để giảm lag                                 |
 
-
-
-# Giữ message được consume theo thứ tự
+## Giữ message được consume theo thứ tự
 
 Ảnh hưởng của các cách tối ưu Kafka đến Message Order
 
-| **Cách tối ưu**                       | **Ảnh hưởng đến thứ tự**                                                                                | **Giải pháp giữ thứ tự**                         |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| **Thêm consumer vào Consumer Group**   | ✅**Ảnh hưởng nếu có nhiều partition**(vì Kafka **không đảm bảo thứ tự giữa partitions** ) | 🛠**Giữ cùng key trên một partition**             |
-| **Tăng số partition**                  | ✅**Ảnh hưởng vì một key có thể bị chia ra nhiều partition khác nhau**                               | 🛠**Dùng cùng partition key (sticky partitioning)** |
-| **Dùng Multi-threading trong Consumer** | ✅**Ảnh hưởng nếu message không xử lý theo thứ tự**                                                   | 🛠**Xử lý tuần tự trong từng partition**         |
-| **Batch Processing / Kafka Streams**     | ✅**Có thể ảnh hưởng nếu message được nhóm lại**                                                    | 🛠**Giữ dữ liệu cùng key trong một nhóm**       |
-| **Reset Offset (latest, earliest)**      | ✅**Ảnh hưởng nếu reset về latest (bỏ message cũ)**                                                     | 🛠**Dùng earliest nếu cần đọc từ đầu**        |
+| **Cách tối ưu**             | **Ảnh hưởng đến thứ tự**                                                          | **Giải pháp giữ thứ tự**             |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| Thêm consumer vào Consumer Group   | Ảnh hưởng nếu có nhiều partition(vì Kafka không đảm bảo thứ tự giữa partitions ) | Giữ cùng key trên một partition             |
+| Tăng số partition                  | Ảnh hưởng vì một key có thể bị chia ra nhiều partition khác nhau                     | Dùng cùng partition key (sticky partitioning) |
+| Dùng Multi-threading trong Consumer | Ảnh hưởng nếu message không xử lý theo thứ tự                                         | Xử lý tuần tự trong từng partition         |
+| Batch Processing / Kafka Streams     | Có thể ảnh hưởng nếu message được nhóm lại                                          | Giữ dữ liệu cùng key trong một nhóm       |
+| Reset Offset (latest, earliest)      | Ảnh hưởng nếu reset về latest (bỏ message cũ)                                           | Dùng earliest nếu cần đọc từ đầu        |
 
 Có 1 cách khác là tăng pod với cấu hình tương tự pod đang chạy, nhưng cần đảm bảo số partition >=  số consumer
 
@@ -411,8 +407,7 @@ Có 1 cách khác là tăng pod với cấu hình tương tự pod đang chạy,
 
 ✔ **Chọn reset offset cẩn thận để tránh mất dữ liệu giữa chừng.**
 
-
-# Filter Message
+## Filter Message
 
 #### **Dùng Kafka Headers để Filter Message (Consumer-side Filtering)**
 
@@ -430,33 +425,32 @@ Có 1 cách khác là tăng pod với cấu hình tương tự pod đang chạy,
 
  **Ý tưởng** : Producer chỉ gửi message vào  **partition mà Group A có thể đọc** , nhưng Group B không có consumer cho partition đó.
 
+## Filter trong kafka
 
-# Filter trong kafka
-
-## 1. **Filtering ở Producer (Tránh gửi dữ liệu không cần thiết)**
+### 1. **Filtering ở Producer (Tránh gửi dữ liệu không cần thiết)**
 
 * Producer có thể quyết định chỉ gửi những message phù hợp với tiêu chí nhất định vào Kafka topic.
 * Ví dụ, chỉ gửi các giao dịch có giá trị trên 1000 USD.
 
-## 2. **Filtering ở Consumer (Bỏ qua message không cần thiết)**
+### 2. **Filtering ở Consumer (Bỏ qua message không cần thiết)**
 
 Consumer có thể đọc tất cả message từ topic nhưng chỉ xử lý những message thỏa mãn điều kiện.
 
 Nhược điểm:  **Vẫn tốn băng thông vì tải toàn bộ dữ liệu về consumer** .
 
-## 3. **Sử dụng Kafka Streams để Filter Message Trước Khi Consumer Nhận**
+### 3. **Sử dụng Kafka Streams để Filter Message Trước Khi Consumer Nhận**
 
 Kafka Streams cho phép bạn xử lý dữ liệu ngay tại cluster Kafka trước khi gửi đến consumer.
 
 **Ưu điểm:** Chỉ gửi dữ liệu cần thiết đến consumer, giảm tải network.
 
-## 4. **Sử dụng Kafka Consumer Group với Filtering**
+### 4. **Sử dụng Kafka Consumer Group với Filtering**
 
 * Bạn có thể tạo **consumer group** chuyên xử lý một loại dữ liệu nhất định.
 * Ví dụ: Một consumer group chỉ xử lý giao dịch trên 1000 USD.
 * **Ưu điểm:** Mỗi nhóm consumer có thể xử lý dữ liệu khác nhau.
 
-## Chọn phương pháp nào?
+### Chọn phương pháp nào?
 
 * Nếu bạn muốn giảm tải  **Kafka Cluster** , hãy filter ngay ở  **Producer** .
 * Nếu bạn cần xử lý linh hoạt hơn, hãy filter ở  **Kafka Streams** .

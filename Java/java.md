@@ -1200,4 +1200,17 @@ public class UserService {
 | **refreshAfterWrite** | Tự động làm mới dữ liệu khi hết hạn (dùng với `AsyncCache`)               |
 | **maximumSize**       | Giới hạn số lượng phần tử trong cache, xóa phần tử ít dùng nhất khi đầy |
 
-# Schedule
+## Schedule
+
+## Sắp xếp 
+
+Trong Java, các thuật toán sắp xếp chính:
+
+* **`Arrays.sort(int[])`** → **Dual-Pivot Quicksort** ( **O(n log n)** ).
+* **`Arrays.sort(T[])` & `Collections.sort(List<T>)`** → **Timsort** ( **O(n log n)** ).
+* **`PriorityQueue`** → **Heap Sort** ( **O(n log n)** ).
+* **`List.sort(Comparator)`** → **Timsort** ( **O(n log n)** ).
+
+**Quicksort** cho mảng nguyên thủy, **Timsort** cho đối tượng.
+
+Dùng **`Comparator` hoặc `Comparable`** để sắp xếp tùy chỉnh.

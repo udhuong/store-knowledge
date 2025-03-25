@@ -218,3 +218,54 @@ fclose($file); // Đóng file
 file_put_contents("example.txt", "Hello, PHP File I/O!");
 file_put_contents("example.txt", "Dòng mới thêm vào file.\n", FILE_APPEND); // Thêm vào cuối file
 ```
+
+## Magic method
+
+Magic method trong PHP là các phương thức đặc biệt của một class, được PHP tự động gọi khi một sự kiện cụ thể xảy ra. Chúng bắt đầu bằng hai dấu gạch dưới (`__`).l
+
+| Magic Method                        | Mô tả                                                                   |
+| ----------------------------------- | ------------------------------------------------------------------------- |
+| `__construct()`                   | Khởi tạo đối tượng                                                  |
+| `__destruct()`                    | Hủy đối tượng                                                        |
+| `__get($name)`                    | Gọi thuộc tính không tồn tại                                        |
+| `__set($name, $value)`            | Gán giá trị cho thuộc tính không tồn tại                          |
+| `__isset($name)`                  | Kiểm tra `isset()`hoặc `empty()`trên thuộc tính không tồn tại |
+| `__unset($name)`                  | Xóa thuộc tính không tồn tại                                        |
+| `__call($name, $arguments)`       | Gọi phương thức không tồn tại từ đối tượng                    |
+| `__callStatic($name, $arguments)` | Gọi phương thức không tồn tại từ class tĩnh                      |
+| `__toString()`                    | Chuyển đổi đối tượng thành chuỗi                                 |
+| `__invoke($arguments)`            | Gọi đối tượng như một hàm                                         |
+| `__sleep()`                       | Xác định các thuộc tính cần serialize                              |
+| `__wakeup()`                      | Khôi phục dữ liệu khi unserialize                                     |
+| `__clone()`                       | Được gọi khi một đối tượng bị clone                             |
+| `__debugInfo()`                   | Kiểm soát thông tin khi `var_dump()`được gọi                     |
+
+## Thuật toán sắp xếp
+
+* **Quicksort** (trước PHP 5.3)
+
+  * Được sử dụng trong các hàm như `sort()`, `asort()`, `ksort()`, `usort()`, `uasort()`, `uksort()`, v.v.
+  * Trung bình có độ phức tạp  **O(n log n)** .
+* **Heapsort** (PHP 5.3 - PHP 7.0)
+
+  * Được sử dụng để thay thế **Quicksort** nhằm cải thiện hiệu suất trong một số trường hợp.
+  * Độ phức tạp  **O(n log n)** .
+* **Timsort** (từ PHP 7.0 trở đi)
+
+  * Đây là một thuật toán kết hợp giữa **Merge Sort** và  **Insertion Sort** .
+  * Cải thiện hiệu suất cho dữ liệu gần như đã sắp xếp.
+  * Được sử dụng trong hầu hết các hàm sắp xếp mặc định của PHP từ PHP 7.0.
+
+### Các hàm sắp xếp phổ biến trong PHP:
+
+| Hàm PHP     | Sắp xếp theo         | Dữ liệu giữ nguyên key | Thứ tự    |
+| ------------ | ---------------------- | -------------------------- | ----------- |
+| `sort()`   | Giá trị              | Không                     | Tăng dần  |
+| `rsort()`  | Giá trị              | Không                     | Giảm dần  |
+| `asort()`  | Giá trị              | Có                        | Tăng dần  |
+| `arsort()` | Giá trị              | Có                        | Giảm dần  |
+| `ksort()`  | Key                    | Có                        | Tăng dần  |
+| `krsort()` | Key                    | Có                        | Giảm dần  |
+| `usort()`  | Hàm callback          | Không                     | Tuỳ chỉnh |
+| `uasort()` | Hàm callback          | Có                        | Tuỳ chỉnh |
+| `uksort()` | Hàm callback theo key | Có                        | Tuỳ chỉnh |
