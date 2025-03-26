@@ -1,4 +1,4 @@
-# **Generics**
+## **Generics**
 
 > Generics (hay còn gọi là kiểu tổng quát) là một tính năng quan trọng trong Java, Linh hoạt trong việc định nghĩa kiểu của dữ liệu
 
@@ -17,11 +17,11 @@ Kiểu dữ liệu tổng quát, giúp code linh hoạt hơn (`List<T>`, `Map<K,
 * Generics với Method `public static <T>`` void printArray(T[] arr)`
 * Generics với Wildcards `public static void printList(List<?> list)`
 
-# **Lambda Expressions**
+## **Lambda Expressions**
 
 > Lambda là một cách viết ngắn gọn của các biểu thức hàm. Đơn giản hóa việc viết code khi làm việc với **functional interfaces**
 
-# **Functional Interfaces**
+## **Functional Interfaces**
 
 > **Functional Interface** là các interface chỉ có duy nhất **một phương thức trừu tượng**
 
@@ -39,7 +39,7 @@ Nằm trong package `java.util.function`. Một số Functional Interfaces quan 
 | **`BiPredicate<T, U>`**   | `boolean test(T t, U u)` | Kiểm tra điều kiện với hai tham số                                       |
 | **`BiConsumer<T, U>`**    | `void accept(T t, U u)`  | Xử lý hai tham số mà không trả về kết quả                             |
 
-# **Streams API**
+## **Streams API**
 
 > **Stream API** là một tính năng giúp **xử lý dữ liệu theo luồng (stream processing)** một cách hiệu quả và dễ đọc hơn.
 
@@ -85,15 +85,15 @@ Xử lý dữ liệu với `map()`, `filter()`, `reduce()` Hỗ trợ xử lý s
 | **`max(Comparator<T>)`**           | Tìm giá trị lớn nhất theo điều kiện so sánh               | Tìm số lớn nhất trong danh sách          |
 | **`toArray()`**                    | Chuyển Stream thành mảng                                        | Chuyển danh sách số thành mảng `int[]` |
 
-# **Annotations**
+## **Annotations**
 
 > Annotations là các siêu dữ liệu (metadata) cung cấp thông tin cho trình biên dịch hoặc runtime mà không ảnh hưởng trực tiếp đến luồng thực thi của chương trình.
 
 Annotation giúp trình biên dịch kiểm tra code, tạo tài liệu, hoặc xử lý logic đặc biệt trong runtime.
 
-## Annotations trong Java
+### Annotations trong Java
 
-### **Annotations cơ bản**
+#### **Annotations cơ bản**
 
 | Annotation               | Ý nghĩa                                                                          |
 | ------------------------ | ---------------------------------------------------------------------------------- |
@@ -102,7 +102,7 @@ Annotation giúp trình biên dịch kiểm tra code, tạo tài liệu, hoặc 
 | `@SuppressWarnings`    | Bỏ qua cảnh báo của trình biên dịch.                                        |
 | `@FunctionalInterface` | Đánh dấu một interface có duy nhất một phương thức trừu tượng.        |
 
-### **Annotations tùy chỉnh (Custom Annotations)**
+#### **Annotations tùy chỉnh (Custom Annotations)**
 
 Bạn có thể tự định nghĩa annotations bằng cách sử dụng `@interface`.
 
@@ -123,9 +123,9 @@ class Test {
 }
 ```
 
-## Annotations trong Spring Boot
+### Annotations trong Spring Boot
 
-### **Annotations liên quan đến Spring Core (Dependency Injection)**
+#### **Annotations liên quan đến Spring Core (Dependency Injection)**
 
 | Annotation          | Ý nghĩa                                                                     |
 | ------------------- | ----------------------------------------------------------------------------- |
@@ -137,7 +137,7 @@ class Test {
 | `@Autowired`      | Inject dependency tự động.                                                 |
 | `@Qualifier`      | Kết hợp với `@Autowired`để xác định cụ thể bean nào cần inject. |
 
-### **Annotations liên quan đến Cấu hình**
+#### **Annotations liên quan đến Cấu hình**
 
 | Annotation          | Ý nghĩa                                         |
 | ------------------- | ------------------------------------------------- |
@@ -146,7 +146,7 @@ class Test {
 | `@Value`          | Inject giá trị từ `application.properties`.  |
 | `@PropertySource` | Load file cấu hình bên ngoài vào ứng dụng. |
 
-### **Annotations trong Spring Boot REST API**
+#### **Annotations trong Spring Boot REST API**
 
 | Annotation          | Ý nghĩa                                         |
 | ------------------- | ------------------------------------------------- |
@@ -158,7 +158,7 @@ class Test {
 | `@RequestParam`   | Lấy tham số từ query string.                   |
 | `@PathVariable`   | Lấy tham số từ URL path.                       |
 
-### **Annotations trong Spring Boot Validation**
+#### **Annotations trong Spring Boot Validation**
 
 | Annotation        | Ý nghĩa                                           |
 | ----------------- | --------------------------------------------------- |
@@ -167,7 +167,7 @@ class Test {
 | `@Size`         | Giới hạn độ dài của chuỗi.                   |
 | `@Min`/`@Max` | Xác định giá trị tối thiểu/tối đa cho số. |
 
-### **Annotations liên quan đến Spring Security**
+#### **Annotations liên quan đến Spring Security**
 
 | Annotation             | Ý nghĩa                                                          |
 | ---------------------- | ------------------------------------------------------------------ |
@@ -176,17 +176,17 @@ class Test {
 | `@PreAuthorize`      | Kiểm tra quyền truy cập trước khi thực hiện phương thức. |
 | `@Secured`           | Định nghĩa quyền cụ thể cho phương thức.                  |
 
-# Collection
+## Collection
 
 > Collection là một interface, đóng vai trò là nền tảng cho các cấu trúc dữ liệu như danh sách (List), tập hợp (Set), hàng đợi (Queue), v.v. Được các lớp như ArrayList, HashSet, LinkedList, v.v., implement.
 
-## **Các Interface Chính Trong Collection**
+### **Các Interface Chính Trong Collection**
 
 * **List**: Danh sách có thứ tự, cho phép trùng lặp (ví dụ: **ArrayList**, **LinkedList**).
 * **Set**: Tập hợp không trùng lặp (ví dụ: **HashSet**, **TreeSet**).
 * **Queue**: Hàng đợi, hỗ trợ thêm/xóa theo thứ tự nhất định (ví dụ: **PriorityQueue**, **LinkedList**).
 
-### **List**
+#### **List**
 
 **List** lưu các phần tử  **theo thứ tự chèn vào**, cho phép phần tử  **trùng lặp**
 
@@ -202,7 +202,7 @@ Khi nào dùng `ArrayList` hay `LinkedList`?
 
 Thông thường, `ArrayList` được sử dụng phổ biến hơn vì hiệu suất tốt hơn trong đa số trường hợp
 
-### **Set**
+#### **Set**
 
 **Set** lưu các phần tử **không trùng nhau** và  **không có thứ tự** .
 
@@ -210,7 +210,7 @@ Thông thường, `ArrayList` được sử dụng phổ biến hơn vì hiệu 
 * **LinkedHashSet**: Giữ thứ tự chèn vào.
 * **TreeSet**: Sắp xếp phần tử theo **tự nhiên** (O(log n)).
 
-### **Queue**
+#### **Queue**
 
 **Queue** lưu các phần tử theo cơ chế  **FIFO (First In First Out)** .
 
@@ -219,7 +219,7 @@ Các class triển khai  **Queue** :
 * **PriorityQueue**: Hàng đợi ưu tiên, sắp xếp phần tử theo  **độ ưu tiên** .
 * **Deque (Double Ended Queue)**: Hỗ trợ thêm/xóa từ cả hai đầu.
 
-### **Map**
+#### **Map**
 
 **Map** lưu dữ liệu dưới dạng  **Key-Value** , trong đó  **Key là duy nhất** .
 
@@ -227,7 +227,7 @@ Các class triển khai  **Queue** :
 * **LinkedHashMap**: Giữ thứ tự chèn vào.
 * **TreeMap**: Sắp xếp theo Key.
 
-# Garbage Collector
+## Garbage Collector
 
 > **Garbage Collector (GC) trong Java** là một cơ chế **tự động thu hồi bộ nhớ** của **các object không còn được sử dụng** để  **giải phóng RAM và tối ưu hiệu suất chương trình**
 
@@ -235,7 +235,7 @@ Java sử dụng GC để quản lý bộ nhớ heap và tránh memory leak.
 
 Lập trình viên không cần giải phóng bộ nhớ thủ công như trong C/C++.
 
-# Bộ nhớ Heap
+## Bộ nhớ Heap
 
 **Định nghĩa:**
 
@@ -275,7 +275,7 @@ public class HeapExample {
 | **Old Generation (Tenured)** | Chứa object tồn tại lâu dài. GC chạy ít hơn nhưng chậm hơn. |
 | **Metaspace**                | Chứa thông tin class, method, không bị GC dọn dẹp.               |
 
-## **Heap vs Stack – Khác nhau thế nào?**
+### **Heap vs Stack – Khác nhau thế nào?**
 
 | **Tiêu chí**           | **Heap**             | **Stack**                          |
 | ------------------------------ | -------------------------- | ---------------------------------------- |
@@ -301,9 +301,9 @@ public class MemoryExample {
 * Nếu Heap đầy, JVM sẽ chạy GC để thu hồi bộ nhớ.
 * Nếu không còn bộ nhớ Heap và GC không thể giải phóng đủ, **Java sẽ bị lỗi `OutOfMemoryError:`**
 
-# String trong Java
+## String trong Java
 
-## String (Immutable)
+### String (Immutable)
 
 Thích hợp khi chuỗi không thay đổi thường xuyên để tránh lãng phí bộ nhớ.
 
@@ -314,7 +314,7 @@ System.out.println(s1); // Output: Hello World
 
 ```
 
-## StringBuffer (Mutable, Thread-safe)
+### StringBuffer (Mutable, Thread-safe)
 
 ```java
 StringBuffer sb = new StringBuffer("Hello");
@@ -325,7 +325,7 @@ System.out.println(sb); // Output: Hello World
 
 Dùng khi cần thao tác nhiều trên chuỗi trong môi trường  **đa luồng** .
 
-## StringBuilder (Mutable, Không đồng bộ)
+### StringBuilder (Mutable, Không đồng bộ)
 
 ```java
 StringBuilder sb = new StringBuilder("Hello");
@@ -336,7 +336,7 @@ System.out.println(sb); // Output: Hello World
 
 Dùng khi không cần  **đồng bộ hóa** , hiệu suất cao hơn `StringBuffer`.
 
-## Khi nào nên dùng?
+### Khi nào nên dùng?
 
 * **Dùng `String`** nếu dữ liệu không thay đổi nhiều.
 * **Dùng `StringBuffer`** nếu làm việc trong môi trường đa luồng.
@@ -344,7 +344,7 @@ Dùng khi không cần  **đồng bộ hóa** , hiệu suất cao hơn `StringBu
 
 **Kết luận:** Nếu không có yêu cầu về  **đa luồng** , nên dùng **`StringBuilder`** vì nó nhanh hơn `StringBuffer`.
 
-## **Tóm tắt cách tối ưu xử lý chuỗi lớn:**
+### **Tóm tắt cách tối ưu xử lý chuỗi lớn:**
 
 | Cách tối ưu                                                 | Lợi ích                                         |
 | -------------------------------------------------------------- | ------------------------------------------------- |
@@ -358,7 +358,7 @@ Dùng khi không cần  **đồng bộ hóa** , hiệu suất cao hơn `StringBu
 
 🔥 **Tóm lại:** Nếu cần hiệu suất cao nhất khi xử lý chuỗi lớn, hãy  **ưu tiên `StringBuilder`** , tránh tạo nhiều object không cần thiết, và sử dụng `BufferedReader` khi đọc file lớn.
 
-## String Pool
+### String Pool
 
 > **String Pool** là một khu vực đặc biệt trong bộ nhớ Heap của Java, nơi các đối tượng `String` được lưu trữ để tối ưu hóa hiệu suất và giảm lãng phí bộ nhớ.
 
@@ -378,7 +378,7 @@ Dùng khi không cần  **đồng bộ hóa** , hiệu suất cao hơn `StringBu
 * Nếu có quá nhiều chuỗi khác nhau, **String Pool** có thể chiếm nhiều bộ nhớ và gây ra  **OutOfMemoryError** .
 * Không thể thay đổi chuỗi sau khi đã được đặt trong Pool do tính **immutable** của `String`.
 
-# Exception
+## Exception
 
 Trong Java, exception được chia thành 3 loại chính:
 
@@ -404,7 +404,7 @@ Checked    Unchecked
 
 ```
 
-# I/O (Đọc/Ghi File)
+## I/O (Đọc/Ghi File)
 
 * **`File`** : Đại diện cho file hoặc thư mục trong hệ thống tệp.
 * **`FileReader` / `FileWriter`** : Đọc/ghi file theo ký tự.
@@ -456,7 +456,7 @@ public class TryWithResourcesExample {
   * Không cần gọi `reader.close()` thủ công.
 * **Nên sử dụng `try-with-resources` thay vì `try-finally`** vì nó đơn giản hơn và ít lỗi hơn.
 
-# Thread (Luồng)
+## Thread (Luồng)
 
 > **Thread** (luồng) là đơn vị nhỏ nhất của một tiến trình (process) được lập lịch và thực thi độc lập. Java hỗ trợ  **đa luồng (multithreading)**, giúp thực hiện nhiều công việc đồng thời, cải thiện hiệu suất và tận dụng tối đa tài nguyên CPU.
 
@@ -466,7 +466,7 @@ public class TryWithResourcesExample {
 - Quản lý thread: Java cung cấp Thread Pool, ExecutorService, giúp tối ưu việc tạo và quản lý nhiều luồng.
 - Nếu cần tính toán nặng, xử lý đa lõi CPU, Java với thread thật sự sẽ tối ưu hơn.
 
-## Các cơ chế khóa luồng
+### Các cơ chế khóa luồng
 
 Starvation: khi một **luồng liên tục bị trì hoãn** vì **các luồng khác được ưu tiên hơn. **Sử dụng fair mode (`true`) trong `ReentrantReadWriteLock`** để đảm bảo công bằng giữa đọc và ghi.**
 
@@ -478,7 +478,7 @@ Starvation: khi một **luồng liên tục bị trì hoãn** vì **các luồng
 | **`StampedLock`**                                  | Hỗ trợ `tryOptimisticRead()`,`tryConvertToReadLock()`giúp tối ưu hóa                              | Không reentrant, khó sử dụng, dễ bị deadlock nếu không dùng đúng                 | Cao nhất nếu tận dụng `tryOptimisticRead()` | Khi cần hiệu suất tối đa, nhiều đọc hơn ghi, không cần reentrant                   |
 | **`Atomic`(`AtomicInteger`,`AtomicLong`, …)** | Rất nhanh, không cần khóa (dùng**CAS - Compare And Swap** )                                      | Chỉ hoạt động với**biến đơn giản**(int, long, boolean, …)                   | Cực nhanh, không chặn luồng                   | Khi chỉ cần thao tác trên biến đơn giản mà không cần khóa toàn bộ đối tượng |
 
-### **`synchronized` (Khóa Mặc Định của Java) - sinh qùa lai**
+#### **`synchronized` (Khóa Mặc Định của Java) - sinh qùa lai**
 
 🔥  **Ưu điểm** :
 
@@ -497,7 +497,7 @@ Starvation: khi một **luồng liên tục bị trì hoãn** vì **các luồng
 * Khi cần  **đồng bộ đơn giản**.
 * Khi có **ít luồng truy cập** và hiệu suất không phải là vấn đề.
 
-### **`ReentrantLock` (Khóa Linh Hoạt Hơn `synchronized`) - ri en trừn**
+#### **`ReentrantLock` (Khóa Linh Hoạt Hơn `synchronized`) - ri en trừn**
 
 🔥  **Ưu điểm** :
 
@@ -515,7 +515,7 @@ Starvation: khi một **luồng liên tục bị trì hoãn** vì **các luồng
 * Khi cần kiểm soát khóa tốt hơn `synchronized`.
 * Khi cần **thử lấy khóa mà không bị chặn mãi mãi** (`tryLock()`).
 
-### **`ReentrantReadWriteLock` (Khóa Đọc/Ghi)**
+#### **`ReentrantReadWriteLock` (Khóa Đọc/Ghi)**
 
 🔥 **Ưu điểm:**
 
@@ -534,7 +534,7 @@ Starvation: khi một **luồng liên tục bị trì hoãn** vì **các luồng
 * Khi  **cần bảo vệ dữ liệu nhưng vẫn tối ưu hóa hiệu suất đọc** .
 * Khi **cần một cơ chế khóa reentrant** nhưng muốn phân biệt giữa đọc và ghi.
 
-### **`StampedLock` (Khóa Hiệu Suất Cao Nhất)**
+#### **`StampedLock` (Khóa Hiệu Suất Cao Nhất)**
 
 🔥  **Ưu điểm** :
 
@@ -552,7 +552,7 @@ Starvation: khi một **luồng liên tục bị trì hoãn** vì **các luồng
 * Khi **hầu hết thao tác là đọc** và  **chỉ có một số ít thao tác ghi** .
 * Khi cần  **hiệu suất cao nhất có thể** .
 
-### **`Atomic` (`AtomicInteger`, `AtomicLong`, …)**
+#### **`Atomic` (`AtomicInteger`, `AtomicLong`, …)**
 
 🔥  **Ưu điểm** :
 
@@ -569,7 +569,7 @@ Starvation: khi một **luồng liên tục bị trì hoãn** vì **các luồng
 * Khi chỉ cần **tăng/giảm một biến đơn giản** mà không cần khóa (`AtomicInteger.incrementAndGet()`).
 * Khi muốn  **tối ưu hiệu suất mà vẫn đảm bảo an toàn dữ liệu** .
 
-## Fair Mode
+### Fair Mode
 
 > **Fair Mode** là một tùy chọn trong `ReentrantLock` và `ReentrantReadWriteLock` giúp đảm bảo **thứ tự công bằng** giữa các luồng.
 
@@ -592,7 +592,7 @@ Khi một luồng chờ khóa, nó sẽ được **xếp hàng theo thứ tự y
 * Muốn tận dụng khả năng giành khóa nhanh của non-fair mode.
 * Chỉ có một số ít luồng truy cập khóa.
 
-## Các cơ chế đồng bộ luồng
+### Các cơ chế đồng bộ luồng
 
 | Cơ chế                                    | Cách hoạt động                                                                  | Khi nào dùng                                                                                                                                         | Ưu điểm                                                             | Nhược điểm                                                                              |
 | ------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -601,7 +601,7 @@ Khi một luồng chờ khóa, nó sẽ được **xếp hàng theo thứ tự y
 | **Phaser**                            | Đồng bộ theo**nhiều giai đoạn** , có thể thêm/xóa luồng linh hoạt | Khi có**nhiều phase (giai đoạn)**cần đồng bộ (VD: nhiều bước trong pipeline xử lý dữ liệu)                                              | Linh hoạt hơn `CyclicBarrier`, có thể**thêm bớt luồng** | Phức tạp hơn `CyclicBarrier`                                                           |
 | **Semaphore (sém mơ phò)**         | Giới hạn số lượng luồng có thể truy cập tài nguyên cùng lúc            | Khi cần**kiểm soát truy cập tài nguyên giới hạn**(VD: giới hạn số lượng kết nối database, số lượng thread truy cập vào file) | Hiệu quả khi giới hạn số luồng truy cập tài nguyên            | Không đảm bảo đồng bộ giữa các luồng như `CountDownLatch`hay `CyclicBarrier` |
 
-### CountDownLatch – Chờ nhiều luồng hoàn thành trước khi tiếp tục
+#### CountDownLatch – Chờ nhiều luồng hoàn thành trước khi tiếp tục
 
 Chỉ dùng latch được 1 lần, ko dùng lại được. Luồng chín sẽ gọi await
 
@@ -636,7 +636,7 @@ public class CountDownLatchExample {
 
 ```
 
-### CyclicBarrier – Đồng bộ tất cả luồng tại checkpoint
+#### CyclicBarrier – Đồng bộ tất cả luồng tại checkpoint
 
 `CyclicBarrier` là một cơ chế đồng bộ giúp **tất cả luồng phải chờ nhau tại một điểm chung (checkpoint)** trước khi tiếp tục.
 
@@ -664,7 +664,7 @@ public class CyclicBarrierExample {
 
 ```
 
-### Phaser – Đồng bộ theo nhiều giai đoạn
+#### Phaser – Đồng bộ theo nhiều giai đoạn
 
 ```java
 import java.util.concurrent.Phaser;
@@ -687,7 +687,7 @@ public class PhaserExample {
 
 ```
 
-### **Semaphore** - Giới hạn số lượng luồng có thể truy cập tài nguyên cùng lúc
+#### **Semaphore** - Giới hạn số lượng luồng có thể truy cập tài nguyên cùng lúc
 
 ```java
 import java.util.concurrent.Semaphore;
@@ -725,7 +725,7 @@ public class SemaphoreExample {
 }
 ```
 
-## An Toàn Luồng (Thread Safety)
+### An Toàn Luồng (Thread Safety)
 
 > An toàn luồng có nghĩa là chương trình có thể chạy song song nhiều luồng mà không xảy ra  **race condition (tranh chấp dữ liệu)** , đảm bảo  **tính toàn vẹn dữ liệu** .
 
@@ -739,7 +739,7 @@ Các Cơ Chế Đảm Bảo An Toàn Luồng
 | **`Concurrent Collections`** | Hiệu suất cao, không cần khóa toàn bộ                         | Tốn bộ nhớ hơn `HashMap`,`ArrayList`                                      | Khi dùng danh sách, hàng đợi trong môi trường đa luồng  |
 | **`ThreadLocal`**            | Biến riêng cho từng luồng, không cần đồng bộ                | Khó quản lý bộ nhớ, dễ gây memory leak                                     | Khi mỗi luồng cần lưu dữ liệu riêng (Session, Transaction) |
 
-## So Sánh Các Collections Trong Đa Luồng vs Không Đa Luồng
+### So Sánh Các Collections Trong Đa Luồng vs Không Đa Luồng
 
 | **Loại Collection** | **Không Hỗ Trợ Đa Luồng** | **Hỗ Trợ Đa Luồng (Thread-Safe)**                           |
 | -------------------------- | ------------------------------------ | --------------------------------------------------------------------- |
@@ -748,7 +748,7 @@ Các Cơ Chế Đảm Bảo An Toàn Luồng
 | **Set**              | `HashSet`,`TreeSet`              | `ConcurrentSkipListSet`,`CopyOnWriteArraySet`                     |
 | **Map**              | `HashMap`,`TreeMap`              | `ConcurrentHashMap`,`ConcurrentSkipListMap`                       |
 
-### **Queue – Hàng Đợi Thread-Safe**
+#### **Queue – Hàng Đợi Thread-Safe**
 
 **Dùng khi:** Cần một hàng đợi mà nhiều luồng có thể thêm/xóa phần tử mà không bị lỗi.
 
@@ -760,7 +760,7 @@ Các Cơ Chế Đảm Bảo An Toàn Luồng
 | `ConcurrentLinkedDeque<E>` | Hàng đợi hai đầu không chặn (non-blocking deque).                                       | Khi cần thêm/xóa phần tử từ cả hai đầu danh sách.                   |
 | `BlockingQueue<E>`         | Hàng đợi có thể chặn khi đầy hoặc rỗng.                                              | Khi cần kiểm soát chặt chẽ số lượng phần tử trong hàng đợi.      |
 
-### **List – Danh Sách Thread-Safe**
+#### **List – Danh Sách Thread-Safe**
 
 **Thay thế cho `ArrayList`** , vì `ArrayList` không an toàn khi nhiều luồng cùng thêm/xóa dữ liệu.
 
@@ -770,7 +770,7 @@ Các Cơ Chế Đảm Bảo An Toàn Luồng
 
 **Lưu ý:** Vì nó sao chép dữ liệu mỗi khi cập nhật, nó **chậm hơn** `ArrayList` khi ghi dữ liệu nhiều lần.
 
-### **Set – Tập Hợp Thread-Safe**
+#### **Set – Tập Hợp Thread-Safe**
 
 **Thay thế cho `HashSet`, `TreeSet`** , vì hai loại này không an toàn khi đa luồng.
 
@@ -779,7 +779,7 @@ Các Cơ Chế Đảm Bảo An Toàn Luồng
 | `ConcurrentSkipListSet<E>` | Sắp xếp phần tử tự động (giống `TreeSet`), hỗ trợ truy cập đồng thời. | Khi cần một tập hợp có thứ tự nhưng vẫn thread-safe. |
 | `CopyOnWriteArraySet<E>`   | Tương tự `CopyOnWriteArrayList`, tạo bản sao mới khi thay đổi.              | Khi có nhiều luồng đọc nhưng ít thay đổi dữ liệu.  |
 
-### **Map – Bản Đồ Dữ Liệu Thread-Safe**
+#### **Map – Bản Đồ Dữ Liệu Thread-Safe**
 
 **Thay thế cho `HashMap`, `TreeMap`** , vì `HashMap` không an toàn khi đa luồng (dễ bị lỗi race condition).
 
@@ -793,7 +793,7 @@ Các Cơ Chế Đảm Bảo An Toàn Luồng
 * `HashMap` dễ bị lỗi khi nhiều luồng ghi cùng lúc → Có thể gây `ConcurrentModificationException`.
 * `ConcurrentHashMap` chia nhỏ dữ liệu để giảm số lượng luồng bị chặn.
 
-## Atomic class
+### Atomic class
 
 > Atomic class cung cấp các biến nguyên tử giúp thực hiện các phép toán một cách **an toàn trong môi trường đa luồng** mà không cần sử dụng `synchronized`
 
@@ -811,9 +811,9 @@ Các Cơ Chế Đảm Bảo An Toàn Luồng
 
 **Ưu điểm:** Không cần dùng `synchronized`, giúp truy cập dữ liệu an toàn và nhanh hơn trong môi trường đa luồng.
 
-# Bất đồng bộ
+## Bất đồng bộ
 
-## CompletableFuture
+### CompletableFuture
 
 > `CompletableFuture` là một API mạnh mẽ trong Java  **8+** , giúp **xử lý tác vụ bất đồng bộ** mà không cần quản lý thủ công `Thread` hoặc `ExecutorService`.
 
@@ -825,7 +825,7 @@ Các Cơ Chế Đảm Bảo An Toàn Luồng
 * Dễ dàng kết hợp nhiều tác vụ song song (`thenCombine`, `thenCompose`).
 * Hỗ trợ xử lý ngoại lệ (`exceptionally`, `handle`).
 
-### **Tổng quan các phương thức của `CompletableFuture`**
+#### **Tổng quan các phương thức của `CompletableFuture`**
 
 | **Loại tác vụ**                         | **Phương thức**                                | **Mô tả**                                                                                               | **Khi nào sử dụng?**                                                                                                         |
 | ------------------------------------------------ | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
@@ -846,7 +846,7 @@ Các Cơ Chế Đảm Bảo An Toàn Luồng
 * Các phương thức có thể kết hợp để tạo pipeline xử lý bất đồng bộ hiệu quả.
 * Sử dụng `ExecutorService` khi muốn kiểm soát số lượng luồng chạy trong `CompletableFuture`.
 
-## ExecutorService
+### ExecutorService
 
 `ExecutorService` là một interface trong `java.util.concurrent` giúp quản lý **Thread Pool** hiệu quả.
 
@@ -865,11 +865,11 @@ Các Cơ Chế Đảm Bảo An Toàn Luồng
 | `newThreadPerTaskExecutor()`         | Tạo một luồng riêng cho**mỗi task** .                                 | Đơn giản, dễ dùng cho task độc lập.                    | Tốn tài nguyên hệ thống nếu có quá nhiều task. | Khi mỗi task cần chạy trên một luồng riêng.                                          |
 | `newVirtualThreadPerTaskExecutor()`  | Tạo**Virtual Thread** , siêu nhẹ, có thể tạo hàng triệu luồng.    | Hiệu suất cao, không bị giới hạn số luồng.             | Chỉ hỗ trợ từ Java 19+.                             | Khi cần xử lý**rất nhiều task song song**mà không bị giới hạn tài nguyên. |
 
-## CompletableFuture và ExecutorService
+### CompletableFuture và ExecutorService
 
 Kết hợp `CompletableFuture` với `ExecutorService` để  **tối ưu hiệu suất** , **kiểm soát số lượng luồng** và  **tùy chỉnh hành vi thực thi** . Dưới đây là các cách sử dụng phổ biến.
 
-### **Sử dụng `ExecutorService` trong `supplyAsync()` và `runAsync()`**
+#### **Sử dụng `ExecutorService` trong `supplyAsync()` và `runAsync()`**
 
 Mặc định, `CompletableFuture.supplyAsync()` và `CompletableFuture.runAsync()` sử dụng  **ForkJoinPool.commonPool().**
 
@@ -892,7 +892,7 @@ public class CompletableFutureWithExecutor {
 }
 ```
 
-### Kết hợp nhiều tác vụ với ExecutorService
+#### Kết hợp nhiều tác vụ với ExecutorService
 
 ```java
 public class MultiTaskExample {
@@ -925,7 +925,7 @@ public class MultiTaskExample {
 
 ```
 
-### Xử lý nhiều task và trả về list kết quả
+#### Xử lý nhiều task và trả về list kết quả
 
 ```java
 public class CompletableFutureListExample {
@@ -967,7 +967,7 @@ public class CompletableFutureListExample {
 
 **Sử dụng `.get()` trên `allTasks`** để lấy danh sách kết quả cuối cùng.
 
-# Reflection
+## Reflection
 
 > Reflection trong Java cho phép truy cập và thao tác với **class, field, method, constructor** trong  **runtime** , ngay cả khi không biết trước tên class hoặc method.
 
@@ -981,11 +981,11 @@ public class CompletableFutureListExample {
 | Tạo object bằng Reflection | `constructor.newInstance(args);`                        |
 | Kiểm tra annotation         | `method.isAnnotationPresent(MyAnnotation.class);`       |
 
-# Biến và static trong java
+## Biến và static trong java
 
 Trong Java, từ khóa `static` giúp  **gán thuộc tính hoặc phương thức cho class thay vì object** , có nghĩa là  **chúng thuộc về class chứ không phải instance** .
 
-## **Biến `static` (Static Variable)**
+### **Biến `static` (Static Variable)**
 
 **📌 Đặc điểm:**
 
@@ -993,7 +993,7 @@ Trong Java, từ khóa `static` giúp  **gán thuộc tính hoặc phương th�
 * **Dùng chung** cho tất cả instance của class.
 * Được tạo **một lần duy nhất** khi class được load vào bộ nhớ.
 
-## **Hàm `static` (Static Method)**
+### **Hàm `static` (Static Method)**
 
 **📌 Đặc điểm:**
 
@@ -1001,14 +1001,14 @@ Trong Java, từ khóa `static` giúp  **gán thuộc tính hoặc phương th�
 * **Chỉ có thể truy cập biến `static`** (không truy cập biến instance).
 * Không thể dùng `this` hoặc `super` trong `static method`.
 
-## **Static Block (`static {}`)**
+### **Static Block (`static {}`)**
 
 **📌 Đặc điểm:**
 
 * Được chạy  **một lần duy nhất khi class được load vào bộ nhớ** .
 * Dùng để  **khởi tạo biến `static` phức tạp** .
 
-## **Static Class (Nested Static Class)**
+### **Static Class (Nested Static Class)**
 
 **📌 Đặc điểm:**
 
@@ -1016,7 +1016,7 @@ Trong Java, từ khóa `static` giúp  **gán thuộc tính hoặc phương th�
 * **Không thể truy cập biến non-static của outer class** .
 * Có thể gọi trực tiếp mà không cần tạo object outer class.
 
-## **Sự khác nhau giữa `static` và `non-static`**
+### **Sự khác nhau giữa `static` và `non-static`**
 
 | Đặc điểm             | `static`                                                         | Non-`static`                       |
 | ------------------------ | ------------------------------------------------------------------ | ------------------------------------ |
@@ -1026,7 +1026,7 @@ Trong Java, từ khóa `static` giúp  **gán thuộc tính hoặc phương th�
 | Dùng `this`/`super` | ❌ Không thể                                                     | ✅ Có thể                          |
 | Khi nào dùng?          | **Hàm tiện ích** , biến dùng chung (counter, config...) | Khi mỗi object có dữ liệu riêng |
 
-# Servlet
+## Servlet
 
 > **Servlet** là một thành phần trong Java EE (Jakarta EE) giúp xử lý các yêu cầu HTTP từ client (thường là trình duyệt) và trả về phản hồi
 
@@ -1039,7 +1039,7 @@ Trong Java, từ khóa `static` giúp  **gán thuộc tính hoặc phương th�
 | **Forward vs Redirect**    | `sendRedirect()`(chuyển hướng),`RequestDispatcher`(chuyển tiếp). |
 | **Servlet vs Spring Boot** | Spring Boot dễ dùng hơn trong các ứng dụng lớn.                    |
 
-## **Servlet vs Spring Boot**
+### **Servlet vs Spring Boot**
 
 **Servlet** là công nghệ lõi của Java Web nhưng cần nhiều cấu hình thủ công.
 
@@ -1056,7 +1056,7 @@ Trong Java, từ khóa `static` giúp  **gán thuộc tính hoặc phương th�
 
 **Spring Boot là lựa chọn tốt hơn nếu bạn đang phát triển REST API hoặc ứng dụng web phức tạp!**
 
-# JDBC (Java Database Connectivity)
+## JDBC (Java Database Connectivity)
 
 > **JDBC** là  **API chuẩn của Java giúp kết nối và làm việc với database** .
 
@@ -1070,7 +1070,7 @@ Trong Java, từ khóa `static` giúp  **gán thuộc tính hoặc phương th�
 * Cần thao tác CRUD (Create, Read, Update, Delete).
 * Cần hiệu suất cao hơn Hibernate/JPA trong một số trường hợp.
 
-# **JPA (Java Persistence API)**
+## **JPA (Java Persistence API)**
 
 > Một chuẩn Java giúp lưu/truy vấn database bằng Object (ORM). Thường dùng với Hibernate (implementation phổ biến nhất).
 
@@ -1086,23 +1086,23 @@ Trong Java, từ khóa `static` giúp  **gán thuộc tính hoặc phương th�
 * Dễ dàng chuyển đổi giữa các loại database (MySQL, PostgreSQL, Oracle, v.v.)
 * Tích hợp tốt với Spring Boot
 
-# Hibernate
+## Hibernate
 
 > **Hibernate** là **một thư viện ORM mạnh mẽ cho Java** , giúp **làm việc với database mà không cần viết SQL thủ công** .
 
 **Nó là một implementation (triển khai) của JPA** – nghĩa là Hibernate thực thi các quy tắc của JPA nhưng cũng có nhiều tính năng nâng cao hơn.
 
-# Cache
+## Cache
 
 Cache là một kỹ thuật quan trọng giúp cải thiện hiệu suất bằng cách lưu trữ dữ liệu tạm thời để giảm số lần truy xuất dữ liệu từ nguồn chậm hơn
 
-## Cache cục bộ
+### Cache cục bộ
 
 **Cache cục bộ (Local Cache)** là bộ nhớ đệm được lưu trữ ngay trên **bộ nhớ RAM** của ứng dụng hoặc máy chủ chạy ứng dụng, giúp truy xuất dữ liệu nhanh hơn so với việc lấy từ database hoặc nguồn bên ngoài.
 
 Ví dụ: Khi một ứng dụng Spring Boot lưu dữ liệu vào  **Caffeine Cache** , dữ liệu này chỉ tồn tại trong bộ nhớ của **instance hiện tại** của ứng dụng.
 
-## Cache phân tán
+### Cache phân tán
 
 **Cache phân tán (Distributed Cache)** là hệ thống cache  **được chia sẻ giữa nhiều server** , giúp **tăng tốc truy vấn dữ liệu** và **giảm tải database** trong các hệ thống lớn.
 
@@ -1113,7 +1113,7 @@ Thay vì mỗi server có cache riêng ( **cache cục bộ** ), cache phân tá
 * Một hệ thống có **10 server** chạy Spring Boot. Nếu mỗi server dùng cache cục bộ, dữ liệu cache không đồng bộ giữa các server.
 * Dùng Redis làm  **cache phân tán** , các server truy cập chung Redis để lấy dữ liệu đã cache.
 
-## **Tổng kết**
+### **Tổng kết**
 
 | **Cache**           | **Caffeine (L1 Cache)**                             | **Redis (L2 Cache)**                  |
 | ------------------------- | --------------------------------------------------------- | ------------------------------------------- |
@@ -1124,7 +1124,7 @@ Thay vì mỗi server có cache riêng ( **cache cục bộ** ), cache phân tá
 | **Mất dữ liệu**  | Khi restart JVM                                           | Không (nếu bật persistence)              |
 | **Dùng khi nào?** | Khi ứng dụng chạy đơn lẻ hoặc cần tốc độ nhanh | Khi cần cache chia sẻ giữa nhiều server |
 
-## Kết hợp cache cục bộ và phân tán
+### Kết hợp cache cục bộ và phân tán
 
 File pom.xml
 
@@ -1191,7 +1191,7 @@ public class UserService {
 }
 ```
 
-### **Tóm tắt**
+#### **Tóm tắt**
 
 | **Tùy chọn**        | **Ý nghĩa**                                                                    |
 | --------------------------- | -------------------------------------------------------------------------------------- |
@@ -1202,7 +1202,7 @@ public class UserService {
 
 ## Schedule
 
-## Sắp xếp 
+## Sắp xếp
 
 Trong Java, các thuật toán sắp xếp chính:
 
