@@ -1,4 +1,4 @@
-# DispatcherServlet
+## DispatcherServlet
 
 `DispatcherServlet` là trung tâm điều phối tất cả các request trong Spring MVC. Nó hoạt động như một  **Front Controller** , tiếp nhận các yêu cầu từ client, sau đó điều phối chúng đến các thành phần thích hợp để xử lý và trả về phản hồi.
 
@@ -50,7 +50,7 @@ Khi một request được gửi đến Spring MVC, nó sẽ trải qua các bư
 | **Tạo Bean `HandlerMapping`**     | Cần khai báo trong `@Configuration`               | Spring Boot tự động cấu hình            |
 | **Trả về JSON/XML**                | Cần cấu hình `Jackson`hoặc `MessageConverter` | Spring Boot tự động chuyển đổi         |
 
-# IoC (Inversion of Control) - Đảo ngược quyền điều khiển
+## IoC (Inversion of Control) - Đảo ngược quyền điều khiển
 
 **IoC (Inversion of Control)** là một nguyên tắc lập trình giúp đảo ngược quyền kiểm soát việc khởi tạo dependencies.
 
@@ -58,49 +58,44 @@ Với IoC, Spring sẽ tự động tạo và quản lý `UserRepository`, bạn
 
 Spring chịu trách nhiệm tạo và cung cấp `UserRepository` mà không cần `new` thủ công. Đây chính là nguyên tắc IoC.
 
-# DI (Dependency Injection) - Tiêm phụ thuộc
+## DI (Dependency Injection) - Tiêm phụ thuộc
 
 **DI (Dependency Injection)** là một cách để hiện thực hóa  **IoC** , bằng cách  **tiêm (inject) dependencies vào một class thay vì để class đó tự tạo chúng** .
 
 **Có 3 cách tiêm phụ thuộc (DI) trong Spring:**
 
-**1️⃣ Constructor Injection (Khuyến khích dùng)**
+### **Constructor Injection (Khuyến khích dùng)**
 
-💡  **Ưu điểm** :
+**Ưu điểm** :
 
-✅ Dễ dàng kiểm thử (Unit Test).
+* Dễ dàng kiểm thử (Unit Test).
+* Hỗ trợ `final` để đảm bảo biến không bị thay đổi sau khi khởi tạo.
 
-✅ Hỗ trợ `final` để đảm bảo biến không bị thay đổi sau khi khởi tạo.
+### **Setter Injection**
 
-**2️⃣ Setter Injection**
+**Ưu điểm**: Có thể thay đổi dependency trong runtime.
 
-💡  **Ưu điểm** :
+**Nhược điểm**: Không đảm bảo dependency luôn có giá trị (có thể bị set `null`).
 
-✅ Có thể thay đổi dependency trong runtime.
+### **Field Injection (Không khuyến khích)**
 
-❌  **Nhược điểm** : Không đảm bảo dependency luôn có giá trị (có thể bị set `null`).
+**Nhược điểm** :
 
-**3️⃣ Field Injection (Không khuyến khích)**
+* Khó kiểm thử vì không thể inject dependency từ bên ngoài.
+* Không thể đánh dấu `final`, khiến đối tượng có thể bị thay đổi.
 
-💡  **Nhược điểm** :
-
-❌ Khó kiểm thử vì không thể inject dependency từ bên ngoài.
-
-❌ Không thể đánh dấu `final`, khiến đối tượng có thể bị thay đổi.
-
-# **IoC Container là gì?**
+## **IoC Container là gì?**
 
 **IoC Container** là một **công cụ** thực thi nguyên tắc IoC, giúp quản lý việc tạo, cung cấp, và inject dependencies vào ứng dụng.
 
-🛠 **IoC Container giúp:**
+**IoC Container giúp:**
 
-✅ Tự động khởi tạo object và inject dependencies ( **Dependency Injection - DI** ).
+* Tự động khởi tạo object và inject dependencies ( **Dependency Injection - DI** ).
+* Giảm sự phụ thuộc giữa các class ( **Loose Coupling** ).
 
-✅ Giảm sự phụ thuộc giữa các class ( **Loose Coupling** ).
+* Dễ dàng thay đổi, mở rộng, và test code ( **Maintainability & Testability** ).
 
-✅ Dễ dàng thay đổi, mở rộng, và test code ( **Maintainability & Testability** ).
-
-# Bean Factory và Application Context
+## Bean Factory và Application Context
 
 BeanFactory là  **IoC Container tối giản** , cung cấp cơ chế Dependency Injection cơ bản.
 
@@ -117,7 +112,7 @@ ApplicationContext mở rộng BeanFactory và bổ sung nhiều tính năng m�
 | **AOP Support**          | ❌ Không hỗ trợ      | ✅ Hỗ trợ AOP                    |
 | **Enterprise Ready**     | ❌ Không phù hợp     | ✅ Được khuyên dùng           |
 
-# Bean
+## Bean
 
 Trong Spring, **Bean** là một đối tượng do Spring IoC Container quản lý. Các Bean này được khai báo, khởi tạo, và quản lý hoàn toàn bởi Spring.
 
@@ -130,18 +125,17 @@ Trong Spring, **Bean** là một đối tượng do Spring IoC Container quản 
 **Cách 2: Dùng @Bean trong Java Configuration (Cách hiện đại nhất)**
 
 * Bạn có thể tạo Bean bằng cách định nghĩa trong một class cấu hình (`@Configuration`).
-
-💡  **Ưu điểm** : Dễ kiểm soát, không cần scan package.
+* **Ưu điểm** : Dễ kiểm soát, không cần scan package.
 
 Cách 3: Dùng XML Configuration (Cách cũ, ít dùng)
 
-* 💡  **Nhược điểm** : Rườm rà, khó bảo trì.  **Spring Boot không khuyến khích cách này** .
+* **Nhược điểm** : Rườm rà, khó bảo trì.  **Spring Boot không khuyến khích cách này** .
 
 Cách 4: Dùng `@PostConstruct` để khởi tạo sau khi Bean được tạo
 
-@Lazy để chỉ khởi tạo bean khi được gọi
+* @Lazy để chỉ khởi tạo bean khi được gọi
 
-#### **Scope của Bean trong Spring**
+### **Scope của Bean trong Spring**
 
 Spring hỗ trợ nhiều **scope** để kiểm soát vòng đời của Bean.
 
@@ -153,21 +147,20 @@ Spring hỗ trợ nhiều **scope** để kiểm soát vòng đời của Bean.
 | **session**(Chỉ dùng với Web App)     | Một instance cho mỗi HTTP session                     | Lưu dữ liệu user theo session               |
 | **application**(Chỉ dùng với Web App) | Một instance chung cho toàn bộ ứng dụng            | Giống singleton nhưng chỉ trong context web |
 
-# @PostConstruct trong Spring là gì?
+## @PostConstruct trong Spring là gì?
 
 `@PostConstruct` là một annotation trong Java (thuộc `javax.annotation`), được Spring sử dụng để đánh dấu  **một method sẽ tự động chạy sau khi bean được khởi tạo và dependency injection hoàn tất** .
 
 **Khi nào nên dùng `@PostConstruct`?**
 
-✅ Load dữ liệu ban đầu vào cache.
+* Load dữ liệu ban đầu vào cache.
+* Mở kết nối database hoặc khởi tạo tài nguyên cần thiết.
 
-✅ Mở kết nối database hoặc khởi tạo tài nguyên cần thiết.
-
-✅ Kiểm tra và thiết lập một số cấu hình sau khi inject dependencies.
+* Kiểm tra và thiết lập một số cấu hình sau khi inject dependencies.
 
 `@PostConstruct` sẽ  **không hoạt động trong Spring Boot 3+** . **Cách thay thế:** Dùng `@EventListener(ApplicationReadyEvent.class)` . Phương thức này chạy ngay khi Spring Boot hoàn tất khởi tạo Bean.
 
-# AOP
+## AOP
 
 **AOP (Aspect-Oriented Programming - Lập trình hướng khía cạnh)** là một kỹ thuật lập trình giúp **tách biệt các chức năng phụ trợ (cross-cutting concerns)** ra khỏi logic chính của ứng dụng.
 
@@ -177,7 +170,7 @@ Spring hỗ trợ nhiều **scope** để kiểm soát vòng đời của Bean.
 
 **AOP giúp tách các chức năng này** ra khỏi logic chính của ứng dụng, giúp code  **gọn gàng, dễ mở rộng và dễ bảo trì** .
 
-# @Anotation
+## @Anotation
 
 ```java
 package com.example.annotation;
@@ -195,10 +188,10 @@ public @interface LogExecutionTime {
 }
 ```
 
-# **SpEL** (Spring Expression Language)
+## **SpEL** (Spring Expression Language)
 
 Trong Spring, **SpEL** (Spring Expression Language) là một ngôn ngữ biểu thức mạnh mẽ được sử dụng để truy vấn, thao tác dữ liệu hoặc thực hiện các phép tính tại runtime, cho phép bạn viết các biểu thức linh hoạt để xử lý logic.
 
 SpEL là một công cụ rất linh hoạt trong Spring, giúp bạn xử lý logic động mà không cần viết mã cứng (hardcode).
 
-# Spring Data
+## Spring Data
