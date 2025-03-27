@@ -92,7 +92,6 @@ Spring chịu trách nhiệm tạo và cung cấp `UserRepository` mà không c�
 
 * Tự động khởi tạo object và inject dependencies ( **Dependency Injection - DI** ).
 * Giảm sự phụ thuộc giữa các class ( **Loose Coupling** ).
-
 * Dễ dàng thay đổi, mở rộng, và test code ( **Maintainability & Testability** ).
 
 ## Bean Factory và Application Context
@@ -155,7 +154,6 @@ Spring hỗ trợ nhiều **scope** để kiểm soát vòng đời của Bean.
 
 * Load dữ liệu ban đầu vào cache.
 * Mở kết nối database hoặc khởi tạo tài nguyên cần thiết.
-
 * Kiểm tra và thiết lập một số cấu hình sau khi inject dependencies.
 
 `@PostConstruct` sẽ  **không hoạt động trong Spring Boot 3+** . **Cách thay thế:** Dùng `@EventListener(ApplicationReadyEvent.class)` . Phương thức này chạy ngay khi Spring Boot hoàn tất khởi tạo Bean.
@@ -195,3 +193,46 @@ Trong Spring, **SpEL** (Spring Expression Language) là một ngôn ngữ biểu
 SpEL là một công cụ rất linh hoạt trong Spring, giúp bạn xử lý logic động mà không cần viết mã cứng (hardcode).
 
 ## Spring Data
+
+## Testing
+
+```
+@ExtendWith(MockitoExtension.class)
+class UserServiceTest {
+  
+    @Mock
+    private UserRepository userRepository;
+
+    @InjectMocks
+    private UserService userService;
+
+    @Test
+    void testGetAllUsers() {
+        // Mock dữ liệu
+        List<User> mockUsers = Arrays.asList(new User(1L, "John", "john@gmail.com"));
+        when(userRepository.findAll()).thenReturn(mockUsers);
+
+        // Gọi method và kiểm tra kết quả
+        List<User> users = userService.getAllUsers();
+        assertEquals(1, users.size());
+        assertEquals("John", users.get(0).getName());
+    }
+
+    @Test
+    void testGetUserByEmail() {
+        User mockUser = new User(1L, "Alice", "alice@gmail.com");
+        when(userRepository.findByEmail("alice@gmail.com")).thenReturn(mockUser);
+
+        User user = userService.getUserByEmail("alice@gmail.com");
+        assertNotNull(user);
+        assertEquals("Alice", user.getName());
+    }
+}
+```
+
+**Giải thích:**
+
+* `@Mock` tạo một mock object cho `UserRepository`.
+* `@InjectMocks` inject `UserRepository` vào `UserService`.
+
+* `when(...).thenReturn(...)` giả lập dữ liệu trả về từ database.

@@ -499,3 +499,5 @@ HAVING total_spent > 10000;
 
 * **Chậm hơn so với Master-Slave do cần đồng bộ dữ liệu nhiều hơn** .
 * **Khó cấu hình hơn** .
+
+## Các chuẩn DB

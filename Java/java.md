@@ -180,6 +180,35 @@ class Test {
 
 > Collection là một interface, đóng vai trò là nền tảng cho các cấu trúc dữ liệu như danh sách (List), tập hợp (Set), hàng đợi (Queue), v.v. Được các lớp như ArrayList, HashSet, LinkedList, v.v., implement.
 
+### **Danh sách liên kết đôi (Doubly Linked List) là gì?**
+
+Danh sách liên kết đôi là một kiểu cấu trúc dữ liệu mà mỗi phần tử (node) chứa:
+
+* **Dữ liệu (data)**
+* **Con trỏ đến phần tử trước (previous)**
+* **Con trỏ đến phần tử sau (next)**
+
+**Sự khác biệt với danh sách liên kết đơn (Singly Linked List)** :
+
+* Danh sách liên kết đơn chỉ có **1 con trỏ (next)** trỏ đến phần tử tiếp theo.
+* Danh sách liên kết đôi có **2 con trỏ (previous và next)** giúp duyệt danh sách theo cả hai chiều.
+
+**Cấu trúc của một node trong danh sách liên kết đôi** :
+
+```java
+class Node {
+    int data;
+    Node previous;
+    Node next;
+
+    public Node(int data) {
+        this.data = data;
+        this.previous = null;
+        this.next = null;
+    }
+}
+```
+
 ### **Các Interface Chính Trong Collection**
 
 * **List**: Danh sách có thứ tự, cho phép trùng lặp (ví dụ: **ArrayList**, **LinkedList**).
@@ -208,7 +237,7 @@ Thông thường, `ArrayList` được sử dụng phổ biến hơn vì hiệu 
 
 * **HashSet**: Không có thứ tự, hiệu suất cao (O(1)).
 * **LinkedHashSet**: Giữ thứ tự chèn vào.
-* **TreeSet**: Sắp xếp phần tử theo **tự nhiên** (O(log n)).
+* **TreeSet**: Sắp xếp phần tử theo **tự nhiên** (O(log n)). Kiểu phần tử có giá trị 1 đến 10 hoặc a đến z
 
 #### **Queue**
 
