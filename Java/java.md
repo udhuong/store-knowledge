@@ -488,7 +488,7 @@ Starvation: khi một **luồng liên tục bị trì hoãn** vì **các luồng
 
 ❌  **Nhược điểm** :
 
-* **Chặn toàn bộ luồng khác** , kể cả khi chỉ có một luồng ghi còn lại là đọc.
+* **Chặn toàn bộ luồng khác** , kể cả khi chỉ có một luồng ghi còn ẽlại là đọc.
 * **Không hỗ trợ timeout hoặc kiểm tra trạng thái khóa** .
 * **Chậm hơn `ReentrantLock` và `StampedLock` trong trường hợp có nhiều luồng** .
 
@@ -1202,7 +1202,7 @@ public class UserService {
 
 ## Schedule
 
-## Sắp xếp 
+## Sắp xếp
 
 Trong Java, các thuật toán sắp xếp chính:
 
