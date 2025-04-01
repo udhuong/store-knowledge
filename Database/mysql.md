@@ -28,8 +28,6 @@ Dùng để lưu trữ các số nguyên, số thực và số thập phân.
 * Dùng **FLOAT, DOUBLE** nếu cần số thập phân nhưng không yêu cầu độ chính xác tuyệt đối (ví dụ: tính toán khoa học).
 * Dùng **DECIMAL** nếu cần độ chính xác tuyệt đối (ví dụ: lưu số tiền).
 
----
-
 ### **2. Kiểu chuỗi (String Data Types)**
 
 Dùng để lưu trữ văn bản, ký tự và dữ liệu nhị phân.
@@ -501,3 +499,5 @@ HAVING total_spent > 10000;
 
 * **Chậm hơn so với Master-Slave do cần đồng bộ dữ liệu nhiều hơn** .
 * **Khó cấu hình hơn** .
+
+## Các chuẩn DB
