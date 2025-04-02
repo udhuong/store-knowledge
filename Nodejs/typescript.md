@@ -40,7 +40,6 @@ let notDefined: undefined = undefined;
 let emptyValue: null = null;
 ```
 
-
 ### Kiểu dữ liệu phức tạp (Reference Types)
 
 ```typescript
@@ -96,9 +95,7 @@ enum Status {
 let taskStatus: Status = Status.InProgress;
 ```
 
-
 ### Các kiểu nâng cao
-
 
 ```typescript
 // Union Type (|) – Chấp nhận nhiều kiểu dữ liệu
@@ -147,3 +144,12 @@ function identity<T>(arg: T): T {
 console.log(identity<number>(10));
 console.log(identity<string>("Hello"));
 ```
+
+## Type và Interface
+
+Trong TypeScript, cả `type` và `interface` đều được sử dụng để định nghĩa kiểu dữ liệu.
+
+### **Cách sử dụng** :
+
+* **`interface`** : Thường được sử dụng để định nghĩa các kiểu đối tượng (object types), đặc biệt là khi bạn muốn mở rộng hoặc kế thừa các kiểu khác.
+* **`type`** : Có thể được sử dụng để định nghĩa nhiều loại kiểu khác nhau, bao gồm đối tượng, kiểu hàm, mảng, hoặc bất kỳ loại dữ liệu nào.
