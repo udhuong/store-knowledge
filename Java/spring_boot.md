@@ -50,50 +50,6 @@ Khi một request được gửi đến Spring MVC, nó sẽ trải qua các bư
 | **Tạo Bean `HandlerMapping`**     | Cần khai báo trong `@Configuration`               | Spring Boot tự động cấu hình            |
 | **Trả về JSON/XML**                | Cần cấu hình `Jackson`hoặc `MessageConverter` | Spring Boot tự động chuyển đổi         |
 
-## IoC (Inversion of Control) - Đảo ngược quyền điều khiển
-
-**IoC (Inversion of Control)** là một nguyên tắc lập trình giúp đảo ngược quyền kiểm soát việc khởi tạo dependencies.
-
-Với IoC, Spring sẽ tự động tạo và quản lý `UserRepository`, bạn chỉ cần sử dụng nó mà không cần khởi tạo thủ công
-
-Spring chịu trách nhiệm tạo và cung cấp `UserRepository` mà không cần `new` thủ công. Đây chính là nguyên tắc IoC.
-
-## DI (Dependency Injection) - Tiêm phụ thuộc
-
-**DI (Dependency Injection)** là một cách để hiện thực hóa  **IoC** , bằng cách  **tiêm (inject) dependencies vào một class thay vì để class đó tự tạo chúng** .
-
-**Có 3 cách tiêm phụ thuộc (DI) trong Spring:**
-
-### **Constructor Injection (Khuyến khích dùng)**
-
-**Ưu điểm** :
-
-* Dễ dàng kiểm thử (Unit Test).
-* Hỗ trợ `final` để đảm bảo biến không bị thay đổi sau khi khởi tạo.
-
-### **Setter Injection**
-
-**Ưu điểm**: Có thể thay đổi dependency trong runtime.
-
-**Nhược điểm**: Không đảm bảo dependency luôn có giá trị (có thể bị set `null`).
-
-### **Field Injection (Không khuyến khích)**
-
-**Nhược điểm** :
-
-* Khó kiểm thử vì không thể inject dependency từ bên ngoài.
-* Không thể đánh dấu `final`, khiến đối tượng có thể bị thay đổi.
-
-## **IoC Container là gì?**
-
-**IoC Container** là một **công cụ** thực thi nguyên tắc IoC, giúp quản lý việc tạo, cung cấp, và inject dependencies vào ứng dụng.
-
-**IoC Container giúp:**
-
-* Tự động khởi tạo object và inject dependencies ( **Dependency Injection - DI** ).
-* Giảm sự phụ thuộc giữa các class ( **Loose Coupling** ).
-* Dễ dàng thay đổi, mở rộng, và test code ( **Maintainability & Testability** ).
-
 ## Bean Factory và Application Context
 
 BeanFactory là  **IoC Container tối giản** , cung cấp cơ chế Dependency Injection cơ bản.
@@ -234,5 +190,4 @@ class UserServiceTest {
 
 * `@Mock` tạo một mock object cho `UserRepository`.
 * `@InjectMocks` inject `UserRepository` vào `UserService`.
-
 * `when(...).thenReturn(...)` giả lập dữ liệu trả về từ database.

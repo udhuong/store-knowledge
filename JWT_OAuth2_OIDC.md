@@ -13,28 +13,28 @@
 * Hỗ trợ nhiều phương thức đăng nhập như Google, Facebook, GitHub, SSO (Single Sign-On), MFA (Multi-Factor Authentication).
 * Giúp các lập trình viên dễ dàng tích hợp hệ thống đăng nhập mà không cần tự xây dựng từ đầu.
 
-## Auth2
+## OAuth 2.0
 
 * Là một giao thức ủy quyền (authorization) giúp ứng dụng cấp quyền truy cập dữ liệu thay mặt người dùng mà không cần chia sẻ mật khẩu.
 * Thường được sử dụng để đăng nhập bằng Google, Facebook, GitHub,...
 * OAuth 2.0 có 4 cách cấp quyền chính: Authorization Code, Implicit, Password, và Client Credentials.
 
-## **Khi nào chọn Auth0, khi nào chọn OAuth2?**
+## **Khi nào chọn Auth0, khi nào chọn OAuth 2.0?**
 
-✅  **Dùng Auth0 khi** :
+**Dùng Auth0 khi** :
 
-✔️ Cần một hệ thống authentication nhanh chóng, có hỗ trợ  **SSO, MFA** .
+* Cần một hệ thống authentication nhanh chóng, có hỗ trợ  **SSO, MFA** .
+* Muốn quản lý user dễ dàng qua Auth0 Dashboard.
 
-✔️ Muốn quản lý user dễ dàng qua Auth0 Dashboard.
+**Dùng OAuth 2.0 khi** :
 
-✅  **Dùng OAuth2 khi** :
-
-✔️ Chỉ cần đăng nhập bằng  **Google, Facebook, GitHub** .
-
-✔️ Muốn quản lý user bằng **database riêng** và chỉ sử dụng OAuth2 để xác thực danh tính.
+* Chỉ cần đăng nhập bằng  **Google, Facebook, GitHub** .
+* Muốn quản lý user bằng **database riêng** và chỉ sử dụng OAuth2 để xác thực danh tính.
 
 ## **Tóm tắt**
 
 * **Auth0** giúp xác thực và ủy quyền với **JWT** dễ dàng trong Spring Boot.
 * **OAuth2** giúp đăng nhập với Google, Facebook mà không cần lưu trữ mật khẩu người dùng.
 * **Auth0 phù hợp cho hệ thống lớn** , trong khi  **OAuth2 thích hợp khi chỉ cần đăng nhập qua bên thứ ba** .
+
+## OpenID Connect
