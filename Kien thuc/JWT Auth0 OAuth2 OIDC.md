@@ -7,17 +7,15 @@
 
 ## Auth0
 
-**Auth0** là một dịch vụ quản lý xác thực và ủy quyền, giúp bạn dễ dàng triển khai **JWT Authentication** mà không cần tự xây dựng từ đầu.
-
-* Là một nền tảng cung cấp dịch vụ xác thực (authentication) và quản lý danh tính (identity management).
-* Hỗ trợ nhiều phương thức đăng nhập như Google, Facebook, GitHub, SSO (Single Sign-On), MFA (Multi-Factor Authentication).
-* Giúp các lập trình viên dễ dàng tích hợp hệ thống đăng nhập mà không cần tự xây dựng từ đầu.
+**Auth0** là một **dịch vụ cung cấp authentication và authorization** (cung cấp sẵn OAuth 2.0, OpenID Connect, SAML, v.v.) giúp lập trình viên triển khai dễ dàng mà không cần tự xây dựng hệ thống xác thực.
 
 ## OAuth 2.0
 
-* Là một giao thức ủy quyền (authorization) giúp ứng dụng cấp quyền truy cập dữ liệu thay mặt người dùng mà không cần chia sẻ mật khẩu.
-* Thường được sử dụng để đăng nhập bằng Google, Facebook, GitHub,...
-* OAuth 2.0 có 4 cách cấp quyền chính: Authorization Code, Implicit, Password, và Client Credentials.
+**OAuth 2.0** là một **giao thức (protocol)** ủy quyền truy cập tài nguyên một cách an toàn mà không cần chia sẻ mật khẩu.l                                  jr45t4ngg 
+
+**Ví dụ thực tế:**
+
+* Khi bạn đăng nhập vào một trang web bằng  **Google/Facebook** , trang web này sử dụng OAuth 2.0 để yêu cầu quyền truy cập vào thông tin của bạn mà không cần biết mật khẩu Google/Facebook của bạn.
 
 ## **Khi nào chọn Auth0, khi nào chọn OAuth 2.0?**
 

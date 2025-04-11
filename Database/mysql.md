@@ -22,6 +22,31 @@ Dùng để lưu trữ các số nguyên, số thực và số thập phân.
 | **DOUBLE (REAL)**     | 8 byte        | ~1.7976931348623157E+308                                   | Số thực, có độ chính xác cao   |
 | **DECIMAL (NUMERIC)** | Tùy chọn    | Định dạng số thập phân chính xác                   |                                       |
 
+**Cả `TINYINT(2)` và `TINYINT(4)`  **không khác nhau về giá trị lưu trữ**.**
+
+| Kiểu           | Miêu tả                                                                                                |
+| --------------- | -------------------------------------------------------------------------------------------------------- |
+| `TINYINT`     | Là kiểu số nguyên 1 byte, lưu giá trị từ -128 đến 127 (hoặc 0 đến 255 nếu `UNSIGNED`)    |
+| `(2)`,`(4)` | Chỉ là **display width** độ rộng hiển thị, không ảnh hưởng đến giá trị lưu trữ |
+
+Từ MySQL 8.0.17 trở đi, display width (như `TINYINT(2)`) đã bị bỏ qua và không còn ý nghĩa trừ khi dùng với  `ZEROFILL` .
+
+```sql
+CREATE TABLE demo (
+  a TINYINT(2),
+  b TINYINT(4) ZEROFILL
+);
+```
+
+| a   | b    |
+| --- | ---- |
+| 5   | 0005 |
+| 15  | 0015 |
+| 123 | 0123 |
+
+* `a` lưu giá trị bình thường (2 là display width nhưng  **không có tác dụng** ).
+* `b` với `ZEROFILL` sẽ hiển thị đủ 4 chữ số bằng cách thêm số 0 phía trước.
+
 **Khi nào dùng số nguyên hay số thực?**
 
 * Dùng **INT, BIGINT** nếu không cần số thập phân.
@@ -46,6 +71,19 @@ Dùng để lưu trữ văn bản, ký tự và dữ liệu nhị phân.
 * **CHAR** : Dùng khi chuỗi có độ dài cố định (vd: mã quốc gia 2 ký tự `US`, `VN`).
 * **VARCHAR** : Dùng khi chuỗi có độ dài thay đổi (vd: tên khách hàng).
 * **TEXT** : Dùng khi lưu trữ văn bản dài (vd: bài viết blog).
+
+Lưu tiếng việt
+
+* `CHARACTER SET utf8mb4`: hỗ trợ đầy đủ tiếng Việt, emoji, tiếng Trung, Nhật,...
+* `COLLATE utf8mb4_unicode_ci`: giúp sắp xếp và so sánh không phân biệt hoa thường, đúng chuẩn Unicode.
+
+Một vài lưu ý:
+
+| Vấn đề                                              | Giải pháp                                                          |
+| ------------------------------------------------------ | -------------------------------------------------------------------- |
+| Lưu tiếng Việt bị lỗi, sai dấu                   | Đảm bảo bảng/table dùng `utf8mb4`, không phải `latin1`    |
+| Hiển thị đúng nhưng truy vấn LIKE không tìm ra | Kiểm tra COLLATE (`utf8mb4_general_ci`hay `utf8mb4_unicode_ci`) |
+| Ứng dụng (Laravel, Spring Boot...) sai font          | Đảm bảo**connection charset**cũng là `utf8mb4`          |
 
 ### **3. Kiểu ngày và thời gian (Date & Time Data Types)**
 
@@ -426,6 +464,8 @@ HAVING total_spent > 10000;
 * **Không tự động failover** (nếu Master hỏng, cần chuyển đổi thủ công).
 * **Dữ liệu có thể trễ trên Slave** do quá trình đồng bộ.
 
+Ví dụ 1 Master - 2 Slave: Sẽ cần 3 con server
+
 ### **Replication – Master-Master**
 
 **Cách hoạt động:**
@@ -500,4 +540,184 @@ HAVING total_spent > 10000;
 * **Chậm hơn so với Master-Slave do cần đồng bộ dữ liệu nhiều hơn** .
 * **Khó cấu hình hơn** .
 
-## Các chuẩn DB
+## Các chuẩn hóa cơ sở dữ liệu
+
+Chuẩn hóa giúp **loại bỏ sự dư thừa** và đảm bảo tính toàn vẹn của dữ liệu
+
+### 1NF
+
+**Điều kiện:**
+
+* **Mỗi bảng phải có một khóa chính** (Primary Key).
+* **Tất cả các cột phải chứa giá trị nguyên tử (atomic)** . Nói cách khác, mỗi cột chỉ chứa **một giá trị duy nhất** (không có nhóm giá trị hay mảng trong một cột).
+
+Giả sử bạn có bảng `students` trước khi chuẩn hóa:
+
+| student_id | name  | phone_numbers        |
+| ---------- | ----- | -------------------- |
+| 1          | Alice | 123456789, 987654321 |
+| 2          | Bob   | 456789123            |
+
+ **Cách chuẩn hóa 1NF** :
+
+Tách các số điện thoại thành các dòng riêng biệt:
+
+| student_id | name  | phone_number |
+| ---------- | ----- | ------------ |
+| 1          | Alice | 123456789    |
+| 1          | Alice | 987654321    |
+| 2          | Bob   | 456789123    |
+
+### 2NF
+
+**Điều kiện:**
+
+* **Đã đạt chuẩn 1NF** .
+* **Không có sự phụ thuộc một phần** (Partial Dependency). Nghĩa là, tất cả các thuộc tính không phải khóa phải phụ thuộc vào toàn bộ khóa chính, không chỉ một phần khóa chính.
+
+ **Giải thích** :
+
+* **Khóa chính** là tập hợp các cột dùng để nhận diện duy nhất mỗi bản ghi.
+* Nếu khóa chính là một  **khóa tổ hợp (composite key)** , tức là khóa chính bao gồm nhiều cột, thì các thuộc tính không thể phụ thuộc vào một phần của khóa.
+
+**Ví dụ:**
+
+Giả sử bạn có bảng `student_courses`:
+
+| student_id | course_id | student_name | course_name |
+| ---------- | --------- | ------------ | ----------- |
+| 1          | 101       | Alice        | Math        |
+| 1          | 102       | Alice        | Physics     |
+| 2          | 101       | Bob          | Math        |
+
+Ở đây, **`student_name`** và **`course_name`** không phụ thuộc vào cả khóa chính (`student_id`, `course_id`), mà chỉ phụ thuộc vào một phần của nó. Đây là  **Partial Dependency** .
+
+ **Cách chuẩn hóa 2NF** :
+
+* Tách bảng ra thành hai bảng:
+  * **`students`** : Chỉ chứa thông tin về học sinh.
+  * **`courses`** : Chỉ chứa thông tin về các khóa học.
+
+**Bảng `students`:**
+
+| student_id | student_name |
+| ---------- | ------------ |
+| 1          | Alice        |
+| 2          | Bob          |
+
+**Bảng `student_courses`:**
+
+| student_id | course_id |
+| ---------- | --------- |
+| 1          | 101       |
+| 1          | 102       |
+| 2          | 101       |
+
+### 3NF
+
+**Điều kiện:**
+
+* **Đã đạt chuẩn 2NF** .
+* **Không có sự phụ thuộc chuyển tiếp** (Transitive Dependency). Nghĩa là, không có thuộc tính nào phụ thuộc vào một thuộc tính không phải khóa, mà chỉ phụ thuộc vào khóa chính.
+
+**Ví dụ:**
+
+Giả sử có bảng `student_details`:
+
+| student_id | student_name | course_id | course_name | instructor |
+| ---------- | ------------ | --------- | ----------- | ---------- |
+| 1          | Alice        | 101       | Math        | Dr. Smith  |
+| 2          | Bob          | 102       | Physics     | Dr. Jones  |
+
+ **Cách chuẩn hóa 3NF** :
+
+* Tách bảng `student_details` thành 3 bảng riêng biệt:
+  * **`students`** : Chứa thông tin về học sinh.
+  * **`courses`** : Chứa thông tin về các khóa học.
+  * **`course_instructors`** : Chứa thông tin về giảng viên.
+
+**Bảng `students`:**
+
+| student_id | student_name |
+| ---------- | ------------ |
+| 1          | Alice        |
+| 2          | Bob          |
+
+**Bảng `courses`:**
+
+| course_id | course_name |
+| --------- | ----------- |
+| 101       | Math        |
+| 102       | Physics     |
+
+**Bảng `course_instructors`:**
+
+| course_id | instructor |
+| --------- | ---------- |
+| 101       | Dr. Smith  |
+| 102       | Dr. Jones  |
+
+### 4NF
+
+**Điều kiện:**
+
+* **Đã đạt chuẩn 3NF** .
+* **Không có phụ thuộc nhiều giá trị (Multivalued Dependency)** .
+
+**Giải thích:**
+
+* **Multivalued Dependency (MVD)** xảy ra khi một cột hoặc tập hợp các cột có thể xác định được một tập hợp giá trị khác mà không phụ thuộc vào các cột khác.
+* **MVD** không phải là một dạng phụ thuộc hàm (Functional Dependency), mà là một sự phụ thuộc giữa các tập hợp giá trị.
+* Khi một bảng có  **MVD** , việc lưu trữ dữ liệu trong cùng một bảng sẽ dẫn đến **dư thừa dữ liệu** và  **khó khăn trong việc bảo trì** .
+
+**Định nghĩa Multivalued Dependency (MVD)** :
+
+Giả sử có bảng `student_courses_languages` sau:
+
+| student_id | course_id | language |
+| ---------- | --------- | -------- |
+| 1          | 101       | English  |
+| 1          | 102       | Spanish  |
+| 1          | 103       | French   |
+| 2          | 101       | English  |
+| 2          | 104       | German   |
+
+Ở đây, có một **multivalued dependency** giữa các cột:
+
+* Một **học sinh** có thể tham gia nhiều khóa học (`course_id`), và
+* Một **học sinh** có thể biết nhiều ngôn ngữ (`language`).
+
+**Tại sao đây là MVD?**
+
+* **student_id** có thể xác định một tập hợp các **courses** và **languages** mà học sinh biết. Tuy nhiên, **course_id** và **language** không phụ thuộc vào nhau mà chỉ phụ thuộc vào  **student_id** .
+
+**Sau khi chuẩn hóa (đạt 4NF):**
+
+**Bảng `student_courses`:**
+
+| student_id | course_id |
+| ---------- | --------- |
+| 1          | 101       |
+| 1          | 102       |
+| 1          | 103       |
+| 2          | 101       |
+| 2          | 104       |
+
+**Bảng `student_languages`:**
+
+| student_id | language |
+| ---------- | -------- |
+| 1          | English  |
+| 1          | Spanish  |
+| 1          | French   |
+| 2          | English  |
+| 2          | German   |
+
+## **Tóm tắt về chuẩn hóa (1NF -> 4NF)** :
+
+| **Chuẩn hóa** | **Điều kiện**                                          |
+| --------------------- | --------------------------------------------------------------- |
+| **1NF**         | Dữ liệu trong cột phải nguyên tử (atomic).                |
+| **2NF**         | Đã đạt chuẩn 1NF, không có Partial Dependency.           |
+| **3NF**         | Đã đạt chuẩn 2NF, không có Transitive Dependency.        |
+| **4NF**         | Đã đạt chuẩn 3NF, không có Multivalued Dependency (MVD). |
